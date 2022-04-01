@@ -32,7 +32,9 @@ class PuzzleSetUpGUI(val url: URL) {
         PuzzleSizeSetting.`25%` to Material.SAND,
         PuzzleSizeSetting.`10%` to Material.GRAVEL,
         PuzzleSizeSetting.`150%` to Material.SANDSTONE,
-        PuzzleSizeSetting.`200%` to Material.SANDSTONE
+        PuzzleSizeSetting.`200%` to Material.NETHER_GOLD_ORE,
+        PuzzleSizeSetting.`300%` to Material.GILDED_BLACKSTONE,
+        PuzzleSizeSetting.`400%` to Material.CRYING_OBSIDIAN,
     )
     val sizeValue = Value(PuzzleSizeSetting.`100%`)
     fun main(plugin: JavaPlugin): GUI {
