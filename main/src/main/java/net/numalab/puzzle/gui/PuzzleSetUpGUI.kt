@@ -93,6 +93,7 @@ class PuzzleSetUpGUI(val url: URL) {
         val stacks = imagedPuzzle.toItemStacks(player.world)
 
         player.sendMessage("パズルを作成しました")
+        player.sendMessage("縦:${yRow} 横:${xColumn}の計${xColumn * yRow}ピースです(手動で額縁をおいてください)")
         for (stack in stacks) {
             player.world.dropItem(player.location, stack)
         }
