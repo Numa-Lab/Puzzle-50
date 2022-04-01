@@ -1,0 +1,5 @@
+name: Puzzle
+version: '${project.version}'
+main: net.numalab.puzzle.PuzzlePlugin
+api-version: 1.16
+authors: [ Bun133 ]
