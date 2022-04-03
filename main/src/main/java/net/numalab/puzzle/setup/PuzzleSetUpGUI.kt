@@ -105,7 +105,7 @@ class PuzzleSetUpGUI(val url: URL, val puzzleLocationSelector: PuzzleLocationSel
 
         player.sendMessage("" + ChatColor.GREEN + "パズル生成中...")
         val mock =
-            DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, true))
+            DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
         player.sendMessage("" + ChatColor.GREEN + "パズル生成完了")
 
         val imagedPuzzle = ImagedPuzzle(mock, split)

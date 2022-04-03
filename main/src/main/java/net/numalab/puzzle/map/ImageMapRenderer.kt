@@ -15,7 +15,9 @@ class ImageMapRenderer(i: BufferedImage) : MapRenderer() {
             colorSetRenderer.arr = converted
         }
     private var converted = AdvancedMapPalette.imageToBytes(img)
-    private val colorSetRenderer = ColorSetMapRenderer(converted, AdvancedMapPalette.getFromColor(Color.BLACK))
+    private val colorSetRenderer =
+        ColorSetMapRenderer(converted, AdvancedMapPalette.getFromColor(Color.BLACK), img.width, img.height)
+
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
         // reset all cursors
         repeat(canvas.cursors.size()) {

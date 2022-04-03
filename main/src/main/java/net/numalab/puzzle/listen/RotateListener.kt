@@ -22,9 +22,18 @@ class RotateListener(plugin: Plugin) : Listener {
             val item = (e.rightClicked as ItemFrame).item
             if (!item.type.isEmpty) {
                 // rotated
-                item(item, e.rightClicked.location)
+                val toUpdate =
+                    e.rightClicked.world.getNearbyEntitiesByType(ItemFrame::class.java, e.rightClicked.location, 1.0)
+                for (itemFrame in toUpdate) {
+                    update(itemFrame)
+                }
             }
         }
+    }
+
+    private fun update(itemFrame: ItemFrame) {
+        val item = itemFrame.item
+        item(item, itemFrame.location)
     }
 
     private fun item(item: ItemStack, location: Location) {

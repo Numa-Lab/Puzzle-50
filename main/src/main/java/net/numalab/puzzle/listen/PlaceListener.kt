@@ -26,8 +26,20 @@ class PlaceListener(plugin: JavaPlugin) : Listener {
             if (item.type.isEmpty) {
                 val mainHand = e.player.inventory.itemInMainHand
                 item(mainHand, en.location)
+
+                val toUpdate = en.world.getNearbyEntitiesByType(ItemFrame::class.java, en.location, 1.0)
+                toUpdate.removeIf { it.uniqueId == en.uniqueId }
+
+                toUpdate.forEach {
+                    update(it)
+                }
             }
         }
+    }
+
+    private fun update(itemFrame: ItemFrame) {
+        val item = itemFrame.item
+        item(item, itemFrame.location)
     }
 
     private fun item(item: ItemStack, location: Location) {
