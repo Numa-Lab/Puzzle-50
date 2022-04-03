@@ -1,7 +1,6 @@
 package net.numalab.puzzle.puzzle
 
-import net.numalab.puzzle.gen.Piece
-import net.numalab.puzzle.gen.Puzzle
+import net.numalab.puzzle.map.ImagedMap
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
 import java.awt.image.BufferedImage

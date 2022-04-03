@@ -1,4 +1,4 @@
-package net.numalab.puzzle.gen
+package net.numalab.puzzle.puzzle
 
 class Piece(
     var top: PieceSideType,

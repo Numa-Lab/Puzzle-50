@@ -1,4 +1,4 @@
-package net.numalab.puzzle.gui
+package net.numalab.puzzle.setup
 
 import com.github.bun133.guifly.gui
 import com.github.bun133.guifly.gui.GUI
@@ -6,12 +6,12 @@ import com.github.bun133.guifly.gui.type.InventoryType
 import com.github.bun133.guifly.item
 import com.github.bun133.guifly.title
 import com.github.bun133.guifly.type
+import com.github.bun133.guifly.value.BooleanValueItemBuilder
 import com.github.bun133.guifly.value.EnumValueItemBuilder
 import com.github.bun133.guifly.value.Value
 import net.kyori.adventure.text.Component
 import net.numalab.puzzle.gen.DefaultPuzzleGenerator
 import net.numalab.puzzle.gen.PuzzleGenerateSetting
-import net.numalab.puzzle.gen.PuzzleGenerator
 import net.numalab.puzzle.img.ImageLoader
 import net.numalab.puzzle.img.ImageResizer
 import net.numalab.puzzle.img.ImageSplitter
@@ -22,9 +22,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.net.URL
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
-class PuzzleSetUpGUI(val url: URL) {
+class PuzzleSetUpGUI(val url: URL, val puzzleLocationSelector: PuzzleLocationSelector) {
     val sizeMaterialMap = mutableMapOf(
         PuzzleSizeSetting.`100%` to Material.STONE,
         PuzzleSizeSetting.`75%` to Material.COBBLESTONE,
@@ -37,6 +36,8 @@ class PuzzleSetUpGUI(val url: URL) {
         PuzzleSizeSetting.`400%` to Material.CRYING_OBSIDIAN,
     )
     val sizeValue = Value(PuzzleSizeSetting.`100%`)
+
+    val isShuffle = Value(false)
     fun main(plugin: JavaPlugin): GUI {
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
             ItemStack(it.value).also { i ->
@@ -48,10 +49,19 @@ class PuzzleSetUpGUI(val url: URL) {
             }
         }).markAsUnMovable().build()
 
+        val shuffle = BooleanValueItemBuilder(
+            3,
+            2,
+            isShuffle,
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルして初期配置しない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルして初期配置する")) } }
+        ).markAsUnMovable().build()
+
         val gui = gui(plugin) {
             title(Component.text("パズル設定"))
             type(InventoryType.CHEST_3)
             addItem(size)
+            addItem(shuffle)
 
             item(9, 3) {
                 markAsUnMovable()
@@ -91,11 +101,16 @@ class PuzzleSetUpGUI(val url: URL) {
         val imagedPuzzle = ImagedPuzzle(mock, split)
 
         val stacks = imagedPuzzle.toItemStacks(player.world)
+        val finalStacks = if (isShuffle.value) {
+            stacks.shuffled()
+        } else {
+            stacks
+        }
 
         player.sendMessage("パズルを作成しました")
-        player.sendMessage("縦:${yRow} 横:${xColumn}の計${xColumn * yRow}ピースです(手動で額縁をおいてください)")
-        for (stack in stacks) {
-            player.world.dropItem(player.location, stack)
-        }
+        player.sendMessage("縦:${yRow} 横:${xColumn}の計${xColumn * yRow}ピースです")
+        player.sendMessage("ブロックをクリックして開始位置を指定してください")
+
+        puzzleLocationSelector.addQueue(player.uniqueId, finalStacks, xColumn, yRow)
     }
 }

@@ -1,13 +1,15 @@
-package net.numalab.puzzle.puzzle
+package net.numalab.puzzle.map
 
 import org.bukkit.entity.Player
 import org.bukkit.map.MapCanvas
-import org.bukkit.map.MapPalette
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
+import java.awt.Color
 import java.awt.image.BufferedImage
 
 class ImageMapRenderer(private val img: BufferedImage) : MapRenderer() {
+    private val converted = AdvancedMapPalette.imageToBytes(img)
+    private val colorSetRenderer = ColorSetMapRenderer(converted, AdvancedMapPalette.getFromColor(Color.BLACK))
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
         // reset all cursors
         repeat(canvas.cursors.size()) {
@@ -16,6 +18,6 @@ class ImageMapRenderer(private val img: BufferedImage) : MapRenderer() {
         }
 
         // draw image
-        canvas.drawImage(0,0,img)
+        colorSetRenderer.render(map, canvas, player)
     }
 }

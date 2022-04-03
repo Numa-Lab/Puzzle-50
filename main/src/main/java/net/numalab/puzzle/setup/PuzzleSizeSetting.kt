@@ -1,4 +1,4 @@
-package net.numalab.puzzle.gui
+package net.numalab.puzzle.setup
 
 enum class PuzzleSizeSetting(val value: Double) {
     // 100%

@@ -1,5 +1,9 @@
 package net.numalab.puzzle.gen
 
+import net.numalab.puzzle.puzzle.Piece
+import net.numalab.puzzle.puzzle.PieceSideType
+import net.numalab.puzzle.puzzle.Puzzle
+
 interface PuzzleGenerator {
     fun generate(setting: PuzzleGenerateSetting): Puzzle
 }
