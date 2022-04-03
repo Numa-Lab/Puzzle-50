@@ -26,11 +26,11 @@ class DefaultPuzzleGenerator : PuzzleGenerator {
             for (x in 0 until setting.width) {
                 for (y in 0 until setting.height) {
                     if (x != 0) {
-                        puzzle[x, y]!!.left = puzzle[x - 1, y]!!.right.getOpposite()
+                        puzzle[x, y]!!.left = puzzle[x - 1, y]!!.right
                     }
 
                     if (y != 0) {
-                        puzzle[x, y]!!.top = puzzle[x, y - 1]!!.bottom.getOpposite()
+                        puzzle[x, y]!!.top = puzzle[x, y - 1]!!.bottom
                     }
 
                     if (x != setting.width - 1) {

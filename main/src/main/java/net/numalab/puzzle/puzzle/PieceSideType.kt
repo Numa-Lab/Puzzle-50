@@ -1,25 +1,19 @@
 package net.numalab.puzzle.puzzle
 
+import java.awt.Color
+
 /**
  * ピースの辺の種類
  */
-enum class PieceSideType {
+enum class PieceSideType(val color: Color?) {
     // まっ平
-    NONE,
+    NONE(null),
 
     // へこんでいる辺
-    DINT,
+    BLUE(Color.BLUE),
 
     // 出っ張っている辺
-    CONVEX;
-
-    fun getOpposite(): PieceSideType {
-        return when (this) {
-            NONE -> NONE
-            DINT -> CONVEX
-            CONVEX -> DINT
-        }
-    }
+    RED(Color.RED);
 
     companion object {
         fun random(containNone: Boolean): PieceSideType {

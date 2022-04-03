@@ -1,5 +1,7 @@
 package net.numalab.puzzle.puzzle
 
+import java.util.UUID
+
 class Piece(
     var top: PieceSideType,
     var bottom: PieceSideType,
@@ -8,6 +10,8 @@ class Piece(
     val x: Int,
     val y: Int
 ) {
+    val uuid = UUID.randomUUID()
+
     /**
      * 右回しに90度回されたときのピース
      */

@@ -5,7 +5,7 @@ import org.bukkit.map.MapCanvas
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
 
-class ColorSetMapRenderer(private val arr: ByteArray, private val defaultColor: Byte?) : MapRenderer() {
+class ColorSetMapRenderer(var arr: ByteArray, private val defaultColor: Byte?) : MapRenderer() {
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
         for (i in 0 until 128) {
             for (j in 0 until 128) {

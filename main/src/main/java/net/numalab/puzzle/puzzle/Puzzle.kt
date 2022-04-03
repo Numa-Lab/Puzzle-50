@@ -10,7 +10,7 @@ class Puzzle(val width: Int, val height: Int) {
     }
 
     operator fun get(x: Int, y: Int): Piece? {
-        if (x in 0 until width && y in 0 until height) return null
+        if (x !in 0 until width || y !in 0 until height) return null
         return arr[x][y]
     }
 
