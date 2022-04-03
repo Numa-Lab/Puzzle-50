@@ -3,6 +3,7 @@ package net.numalab.puzzle.puzzle
 import net.numalab.puzzle.map.ImagedMap
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.java.JavaPlugin
 import java.awt.image.BufferedImage
 
 class ImagedPuzzle(val puzzle: Puzzle, val imageSet: Map<Pair<Int, Int>, BufferedImage>) {

@@ -23,11 +23,11 @@ class PuzzleLocationSelector(plugin: JavaPlugin) : Listener {
             val b =
                 FrameFiller(e.clickedBlock!!.location.add(.0, 1.0, .0), en.second.first, en.second.second).set(en.first)
             if (b) {
-                e.player.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度設定してください。")
+                e.player.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
             } else {
                 e.player.sendMessage("パズルの開始位置を設定しました")
-                queue.remove(e.player.uniqueId)
             }
+            queue.remove(e.player.uniqueId)
         }
     }
 

@@ -2,6 +2,7 @@ package net.numalab.puzzle.geo
 
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.BlockFace
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.inventory.ItemStack
@@ -38,5 +39,6 @@ class FrameFiller(val startLocation: Location, val width: Int, val height: Int) 
         val itemFrame = location.world.spawnEntity(location, EntityType.ITEM_FRAME)
         itemFrame as ItemFrame
         itemFrame.setItem(content)
+        itemFrame.setFacingDirection(BlockFace.UP, true)
     }
 }
