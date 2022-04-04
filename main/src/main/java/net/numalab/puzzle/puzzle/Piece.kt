@@ -8,6 +8,7 @@ class Piece(
     var bottom: PieceSideType,
     var right: PieceSideType,
     var left: PieceSideType,
+    val puzzle:Puzzle,
     val x: Int,
     val y: Int
 ) {

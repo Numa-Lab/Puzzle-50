@@ -19,7 +19,7 @@ class DefaultPuzzleGenerator : PuzzleGenerator {
         val puzzle = Puzzle(setting.width, setting.height)
         for (x in 0 until setting.width) {
             for (y in 0 until setting.height) {
-                puzzle[x, y] = Piece(PieceSideType.NONE, PieceSideType.NONE, PieceSideType.NONE, PieceSideType.NONE,x,y)
+                puzzle[x, y] = Piece(PieceSideType.NONE, PieceSideType.NONE, PieceSideType.NONE, PieceSideType.NONE,puzzle,x,y)
             }
         }
         if (!setting.isFlat) {

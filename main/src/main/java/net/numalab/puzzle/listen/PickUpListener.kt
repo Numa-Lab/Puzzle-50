@@ -2,6 +2,7 @@ package net.numalab.puzzle.listen
 
 import net.numalab.puzzle.map.ImagedMapManager
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
@@ -21,6 +22,8 @@ class PickUpListener(plugin: Plugin) : Listener {
                 stacks.forEach {
                     map.updateStack(it, null, null)
                 }
+
+                checkSolved(map.piece.puzzle, e.entity.location, e.entity as Player)
             }
         }
     }

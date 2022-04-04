@@ -15,6 +15,7 @@ import net.numalab.puzzle.gen.PuzzleGenerateSetting
 import net.numalab.puzzle.img.ImageLoader
 import net.numalab.puzzle.img.ImageResizer
 import net.numalab.puzzle.img.ImageSplitter
+import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.puzzle.ImagedPuzzle
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -106,9 +107,12 @@ class PuzzleSetUpGUI(val url: URL, val puzzleLocationSelector: PuzzleLocationSel
         player.sendMessage("" + ChatColor.GREEN + "パズル生成中...")
         val mock =
             DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
+        val imaged = split.map {
+            ImagedMap(it.value, mock[it.key.first, it.key.second]!!)
+        }
         player.sendMessage("" + ChatColor.GREEN + "パズル生成完了")
 
-        val imagedPuzzle = ImagedPuzzle(mock, split)
+        val imagedPuzzle = ImagedPuzzle(mock, imaged)
 
         player.sendMessage("" + ChatColor.GREEN + "ピース生成中...")
         val stacks = imagedPuzzle.toItemStacks(player.world)

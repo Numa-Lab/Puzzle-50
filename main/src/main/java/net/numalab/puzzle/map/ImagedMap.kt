@@ -18,6 +18,9 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
         const val OverlayPixel = 5
     }
 
+    var isSolved = false
+        private set
+
     fun get(world: World): ItemStack {
         val map = Bukkit.createMap(world)
         map.renderers.forEach {
@@ -128,18 +131,28 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
         g.drawImage(img, 0, 0, null)
         g.dispose()
 
-        if (isUpOverlay(frame, rot)) {
+        val isUpOverlay = isUpOverlay(frame, rot)
+        val isRightOverlay = isRightOverlay(frame, rot)
+        val isDownOverlay = isDownOverlay(frame, rot)
+        val isLeftOverlay = isLeftOverlay(frame, rot)
+
+        if (isUpOverlay) {
             drawUpOverLay(copy)
         }
-        if (isDownOverlay(frame, rot)) {
+        if (isDownOverlay) {
             drawDownOverLay(copy)
         }
-        if (isLeftOverlay(frame, rot)) {
+        if (isLeftOverlay) {
             drawLeftOverLay(copy)
         }
-        if (isRightOverlay(frame, rot)) {
+        if (isRightOverlay) {
             drawRightOverLay(copy)
         }
+
+        isSolved = (!isUpOverlay || piece.top == PieceSideType.NONE) &&
+                (!isRightOverlay || piece.right == PieceSideType.NONE) &&
+                (!isDownOverlay || piece.bottom == PieceSideType.NONE) &&
+                (!isLeftOverlay || piece.left == PieceSideType.NONE)
 
         return copy
     }

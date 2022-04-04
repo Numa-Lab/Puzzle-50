@@ -1,30 +1,33 @@
 package net.numalab.puzzle.map
 
 import net.numalab.puzzle.RotationUtils
+import net.numalab.puzzle.puzzle.ImagedPuzzle
 import net.numalab.puzzle.puzzle.PieceSideType
+import net.numalab.puzzle.puzzle.Puzzle
 import org.bukkit.NamespacedKey
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.ItemFrame
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import java.util.UUID
 
 class ImagedMapManager {
     companion object {
-        private val imagedMap = mutableMapOf<String, ImagedMap>()
-        private val stackMap = mutableMapOf<String, MutableList<ItemStack>>()
+        private val imagedMap = mutableMapOf<UUID, ImagedMap>()
+        private val stackMap = mutableMapOf<UUID, MutableList<ItemStack>>()
         private val nameSpacedKey = NamespacedKey("puzzle", "stackmarker")
 
         fun register(itemStack: ItemStack, map: ImagedMap) {
             val meta = itemStack.itemMeta
             if (meta != null) {
                 meta.persistentDataContainer.set(nameSpacedKey, PersistentDataType.STRING, map.piece.uuid.toString())
-                imagedMap[map.piece.uuid.toString()] = map
-                addStack(map.piece.uuid.toString(), itemStack)
+                imagedMap[map.piece.uuid] = map
+                addStack(map.piece.uuid, itemStack)
                 itemStack.itemMeta = meta
             }
         }
 
-        private fun addStack(uuid: String, itemStack: ItemStack) {
+        private fun addStack(uuid: UUID, itemStack: ItemStack) {
             val e = stackMap[uuid]
             if (e != null) {
                 e.add(itemStack)
@@ -36,7 +39,8 @@ class ImagedMapManager {
         fun get(itemStack: ItemStack): ImagedMap? {
             val meta = itemStack.itemMeta
             if (meta != null) {
-                val uuid = meta.persistentDataContainer.get(nameSpacedKey, PersistentDataType.STRING)
+                val uuids = meta.persistentDataContainer.get(nameSpacedKey, PersistentDataType.STRING)
+                val uuid = UUID.fromString(uuids)
                 if (uuid != null) {
                     return imagedMap[uuid]
                 }
@@ -45,7 +49,7 @@ class ImagedMapManager {
         }
 
         fun getAllStack(map: ImagedMap): List<ItemStack> {
-            return stackMap[map.piece.uuid.toString()]?.toMutableList() ?: listOf()
+            return stackMap[map.piece.uuid]?.toMutableList() ?: listOf()
         }
 
         fun reset() {

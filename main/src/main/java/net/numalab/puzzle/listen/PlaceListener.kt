@@ -27,34 +27,9 @@ class PlaceListener(val plugin: JavaPlugin) : Listener {
                     toUpdate.forEach {
                         update(it)
                     }
+
+                    checkSolved(en,e.player)
                 }, 1)
-            }
-        }
-    }
-
-    private fun update(itemFrame: ItemFrame) {
-        val item = itemFrame.item
-        itemNotRotate(item, itemFrame)
-    }
-
-    private fun itemNotRotate(item: ItemStack, frame: ItemFrame) {
-        if (item.type != Material.MAP && item.type != Material.FILLED_MAP) return
-        val map = ImagedMapManager.get(item)
-        if (map != null) {
-            val stacks = ImagedMapManager.getAllStack(map)
-            stacks.forEach {
-                map.updateStack(it, frame, frame.rotation)
-            }
-        }
-    }
-
-    private fun itemRotate(item: ItemStack, frame: ItemFrame) {
-        if (item.type != Material.MAP && item.type != Material.FILLED_MAP) return
-        val map = ImagedMapManager.get(item)
-        if (map != null) {
-            val stacks = ImagedMapManager.getAllStack(map)
-            stacks.forEach {
-                map.updateStack(it, frame, Rotation.NONE)
             }
         }
     }

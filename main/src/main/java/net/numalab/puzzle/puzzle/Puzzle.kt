@@ -22,10 +22,4 @@ class Puzzle(val width: Int, val height: Int) {
         }
         return false
     }
-
-    fun isSameAt(to: Puzzle, x: Int, y: Int): Boolean {
-        if (to === this) throw IllegalArgumentException("to is same as this")
-        if (x !in 0 until width || y !in 0 until height) return false
-        return to[x, y] == this[x, y]
-    }
 }

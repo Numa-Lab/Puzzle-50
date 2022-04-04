@@ -1,6 +1,5 @@
 package net.numalab.puzzle.listen
 
-import net.numalab.puzzle.RotationUtils
 import net.numalab.puzzle.map.ImagedMapManager
 import org.bukkit.Material
 import org.bukkit.entity.ItemFrame
@@ -25,26 +24,13 @@ class RotateListener(val plugin: Plugin) : Listener {
                     e.rightClicked.world.getNearbyEntitiesByType(ItemFrame::class.java, e.rightClicked.location, 1.0)
                 plugin.server.scheduler.runTaskLater(plugin, Runnable {
                     for (itemFrame in toUpdate) {
-                        updateNotRotate(itemFrame)
+                        update(itemFrame)
                     }
+
+                    checkSolved(e.rightClicked as ItemFrame, e.player)
                 }, 1)
             }
         }
     }
 
-    private fun updateNotRotate(itemFrame: ItemFrame) {
-        val item = itemFrame.item
-        itemNotRotate(item, itemFrame)
-    }
-
-    private fun itemNotRotate(item: ItemStack, frame: ItemFrame) {
-        if (item.type != Material.MAP && item.type != Material.FILLED_MAP) return
-        val map = ImagedMapManager.get(item)
-        if (map != null) {
-            val stacks = ImagedMapManager.getAllStack(map)
-            stacks.forEach {
-                map.updateStack(it, frame, frame.rotation)
-            }
-        }
-    }
 }
