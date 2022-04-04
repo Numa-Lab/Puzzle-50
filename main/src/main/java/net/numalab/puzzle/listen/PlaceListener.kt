@@ -23,7 +23,6 @@ class PlaceListener(val plugin: JavaPlugin) : Listener {
             if (item.type.isEmpty) {
                 plugin.server.scheduler.runTaskLater(plugin, Runnable {
                     val toUpdate = en.world.getNearbyEntitiesByType(ItemFrame::class.java, en.location, 1.0)
-                    toUpdate.removeIf { it.uniqueId == en.uniqueId }
                     toUpdate.forEach {
                         update(it)
                     }
