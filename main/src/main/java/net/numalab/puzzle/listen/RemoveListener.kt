@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class RemoveListener(plugin: JavaPlugin) : Listener {
+class RemoveListener(val plugin: JavaPlugin) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
@@ -24,11 +24,12 @@ class RemoveListener(plugin: JavaPlugin) : Listener {
             if (en is ItemFrame) {
                 val toUpdate = en.world.getNearbyEntitiesByType(ItemFrame::class.java, en.location, 1.0)
                 toUpdate.removeIf { it.uniqueId == en.uniqueId }
-                toUpdate.forEach {
-                    update(it)
-                }
-
-                itemNot(en.item)
+                plugin.server.scheduler.runTaskLater(plugin, Runnable {
+                    toUpdate.forEach {
+                        update(it)
+                    }
+                    itemNot(en.item)
+                },1L)
             }
         }
     }

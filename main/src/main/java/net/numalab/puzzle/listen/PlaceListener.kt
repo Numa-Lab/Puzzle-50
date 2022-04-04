@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class PlaceListener(plugin: JavaPlugin) : Listener {
+class PlaceListener(val plugin: JavaPlugin) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
@@ -21,15 +21,13 @@ class PlaceListener(plugin: JavaPlugin) : Listener {
         if (en is ItemFrame) {
             val item = en.item
             if (item.type.isEmpty) {
-                val mainHand = e.player.inventory.itemInMainHand
-                itemRotate(mainHand, en)
-
-                val toUpdate = en.world.getNearbyEntitiesByType(ItemFrame::class.java, en.location, 1.0)
-                toUpdate.removeIf { it.uniqueId == en.uniqueId }
-
-                toUpdate.forEach {
-                    update(it)
-                }
+                plugin.server.scheduler.runTaskLater(plugin, Runnable {
+                    val toUpdate = en.world.getNearbyEntitiesByType(ItemFrame::class.java, en.location, 1.0)
+                    toUpdate.removeIf { it.uniqueId == en.uniqueId }
+                    toUpdate.forEach {
+                        update(it)
+                    }
+                }, 1)
             }
         }
     }
