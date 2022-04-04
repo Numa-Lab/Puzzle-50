@@ -3,6 +3,7 @@ package net.numalab.puzzle.listen
 import net.numalab.puzzle.map.ImagedMapManager
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Rotation
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
 import org.bukkit.event.EventHandler
@@ -26,22 +27,35 @@ class RemoveListener(plugin: JavaPlugin) : Listener {
                 toUpdate.forEach {
                     update(it)
                 }
+
+                itemNot(en.item)
             }
         }
     }
 
     private fun update(itemFrame: ItemFrame) {
         val item = itemFrame.item
-        item(item, itemFrame.location)
+        item(item, itemFrame)
     }
 
-    private fun item(item: ItemStack, location: Location) {
+    private fun item(item: ItemStack, frame: ItemFrame) {
         if (item.type != Material.MAP && item.type != Material.FILLED_MAP) return
         val map = ImagedMapManager.get(item)
         if (map != null) {
             val stacks = ImagedMapManager.getAllStack(map)
             stacks.forEach {
-                map.updateStack(it, location)
+                map.updateStack(it, frame, frame.rotation)
+            }
+        }
+    }
+
+    private fun itemNot(item: ItemStack) {
+        if (item.type != Material.MAP && item.type != Material.FILLED_MAP) return
+        val map = ImagedMapManager.get(item)
+        if (map != null) {
+            val stacks = ImagedMapManager.getAllStack(map)
+            stacks.forEach {
+                map.updateStack(it, null, null)
             }
         }
     }

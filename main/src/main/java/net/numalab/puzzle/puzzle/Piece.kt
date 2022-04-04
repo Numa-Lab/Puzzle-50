@@ -1,5 +1,6 @@
 package net.numalab.puzzle.puzzle
 
+import org.bukkit.block.BlockFace
 import java.util.UUID
 
 class Piece(
@@ -12,19 +13,15 @@ class Piece(
 ) {
     val uuid = UUID.randomUUID()
 
-    /**
-     * 右回しに90度回されたときのピース
-     */
-    fun rotate() {
-        val btop = top
-        val bbottom = bottom
-        val bleft = left
-        val bright = right
 
-        top = bleft
-        bottom = bright
-        right = btop
-        left = bbottom
+    fun get(direction: BlockFace): PieceSideType {
+        return when (direction) {
+            BlockFace.NORTH -> top
+            BlockFace.SOUTH -> bottom
+            BlockFace.EAST -> right
+            BlockFace.WEST -> left
+            else -> throw IllegalArgumentException("direction is not valid")
+        }
     }
 
     override fun equals(other: Any?): Boolean {

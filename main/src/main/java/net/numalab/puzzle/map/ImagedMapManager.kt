@@ -1,6 +1,10 @@
 package net.numalab.puzzle.map
 
+import net.numalab.puzzle.RotationUtils
+import net.numalab.puzzle.puzzle.PieceSideType
 import org.bukkit.NamespacedKey
+import org.bukkit.block.BlockFace
+import org.bukkit.entity.ItemFrame
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
@@ -46,6 +50,12 @@ class ImagedMapManager {
 
         fun reset() {
             imagedMap.clear()
+        }
+
+        fun getType(itemFrame: ItemFrame, direction: BlockFace): PieceSideType? {
+            val map = get(itemFrame.item) ?: return null
+            val dir = RotationUtils.decrementRotation(direction, itemFrame.rotation)
+            return map.piece.get(dir)
         }
     }
 }

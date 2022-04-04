@@ -19,7 +19,7 @@ class PickUpListener(plugin: Plugin) : Listener {
             if (map != null) {
                 val stacks = ImagedMapManager.getAllStack(map)
                 stacks.forEach {
-                    map.updateStack(it,null)
+                    map.updateStack(it, null, null)
                 }
             }
         }

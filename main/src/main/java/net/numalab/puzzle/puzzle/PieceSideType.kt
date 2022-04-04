@@ -6,13 +6,9 @@ import java.awt.Color
  * ピースの辺の種類
  */
 enum class PieceSideType(val color: Color?) {
-    // まっ平
     NONE(null),
-
-    // へこんでいる辺
     BLUE(Color.BLUE),
-
-    // 出っ張っている辺
+    GREEN(Color.GREEN),
     RED(Color.RED);
 
     companion object {
