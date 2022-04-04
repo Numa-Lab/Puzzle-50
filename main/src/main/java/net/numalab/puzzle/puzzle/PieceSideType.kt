@@ -7,9 +7,11 @@ import java.awt.Color
  */
 enum class PieceSideType(val color: Color?) {
     NONE(null),
-    BLUE(Color.BLUE),
-    GREEN(Color.GREEN),
-    RED(Color.RED);
+    GRAY(Color(0xD3D4D9)),
+    RED(Color(0xE15554)),
+    GREEN(Color(0x6DA34D)),
+    VIOLET(Color(0x7768AE)),
+    CORN(Color(0xF2ED6F));
 
     companion object {
         fun random(containNone: Boolean): PieceSideType {

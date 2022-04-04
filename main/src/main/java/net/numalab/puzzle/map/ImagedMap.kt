@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage
 
 class ImagedMap(var img: BufferedImage, val piece: Piece) {
     companion object {
-        const val OverlayPixel = 5
+        const val OverlayPixel = 2
     }
 
     var isSolved = false
