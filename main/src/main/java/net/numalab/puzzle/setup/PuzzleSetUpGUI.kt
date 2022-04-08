@@ -10,6 +10,8 @@ import com.github.bun133.guifly.value.BooleanValueItemBuilder
 import com.github.bun133.guifly.value.EnumValueItemBuilder
 import com.github.bun133.guifly.value.Value
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.numalab.puzzle.DefaultPuzzleSetting
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -42,14 +44,14 @@ class PuzzleSetUpGUI(
             QuitSetting.AssignToAll to {
                 ItemStack(Material.FIREWORK_ROCKET).also {
                     it.editMeta { m ->
-                        m.displayName(Component.text("途中抜け時にピースを再配分する"))
+                        m.displayName(Component.text("途中抜けした人のピースを再割り当てする"))
                     }
                 }
             },
             QuitSetting.None to {
                 ItemStack(Material.BARRIER).also {
                     it.editMeta { m ->
-                        m.displayName(Component.text("途中抜け時にピースを再配分しない"))
+                        m.displayName(Component.text("途中抜けした人のピースを再割り当てしない"))
                     }
                 }
             }
@@ -60,6 +62,7 @@ class PuzzleSetUpGUI(
     private val isShuffle = Value(defaultSetting.isShuffle.value())
     private val isAssign = Value(defaultSetting.isAssign.value())
     private val quitSetting = Value(defaultSetting.quitSettingMode.value())
+    private val renameMap = Value(defaultSetting.changeMapNameToPlayerName.value())
 
     private fun genGUI(plugin: JavaPlugin): GUI {
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
@@ -76,16 +79,28 @@ class PuzzleSetUpGUI(
             3,
             2,
             isShuffle,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルして初期配置しない")) } },
-            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルして初期配置する")) } }
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルしない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルする")) } }
         ).markAsUnMovable().build()
 
         val assign = BooleanValueItemBuilder(
             4,
             2,
             isAssign,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースを割り当てない")) } },
-            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースを割り当てる")) } }
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースを個人に割り当てない")) } },
+            ItemStack(Material.LIME_WOOL).also {
+                it.editMeta { m ->
+                    m.displayName(Component.text("ピースを個人に割り当てる"))
+                    m.lore(
+                        listOf(
+                            Component.text("[注意!]インベントリが")
+                                .color(NamedTextColor.RED)
+                                .append(Component.text("リセットされます").color(NamedTextColor.WHITE)
+                                    .style { s -> s.decorate(TextDecoration.BOLD) })
+                        )
+                    )
+                }
+            }
         ).markAsUnMovable().build()
 
         val quit = EnumValueItemBuilder(
@@ -95,6 +110,14 @@ class PuzzleSetUpGUI(
             quitItemStackMap.mapValues { v -> v.value() }
         ).markAsUnMovable().build()
 
+        val rename = BooleanValueItemBuilder(
+            6,
+            2,
+            renameMap,
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("プレイヤー名をマップ名に変更しない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("プレイヤー名をマップ名に変更する")) } }
+        ).markAsUnMovable().build()
+
         val gui = gui(plugin) {
             title(Component.text("パズル設定"))
             type(InventoryType.CHEST_3)
@@ -102,6 +125,7 @@ class PuzzleSetUpGUI(
             addItem(shuffle)
             addItem(assign)
             addItem(quit)
+            addItem(rename)
 
             item(9, 3) {
                 markAsUnMovable()
@@ -134,7 +158,8 @@ class PuzzleSetUpGUI(
             isShuffle.value,
             url,
             isAssign.value,
-            quitSetting.value
+            quitSetting.value,
+            renameMap.value
         )
         defaultSetting.applySettings(setting)
         callBack(setting)

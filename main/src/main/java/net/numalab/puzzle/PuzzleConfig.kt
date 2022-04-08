@@ -24,7 +24,8 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
             isShuffle.value(),
             url,
             isAssign.value(),
-            quitSettingMode.value()
+            quitSettingMode.value(),
+            changeMapNameToPlayerName.value()
         )
     }
 
@@ -33,6 +34,7 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
         this.isShuffle.value(settings.isShuffle)
         this.isAssign.value(settings.assignPieceMode)
         this.quitSettingMode.value(settings.quitSettingMode)
+        this.changeMapNameToPlayerName.value(settings.renameMap)
     }
 
     val size = EnumValue<PuzzleSizeSetting>(PuzzleSizeSetting.`100%`)
@@ -42,4 +44,9 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
     val isAssign = BooleanValue(false)
 
     val quitSettingMode = EnumValue<QuitSetting>(QuitSetting.None)
+
+    /**
+     * マップをプレイヤーの名前にリーネームするか(割り当てモード時)
+     */
+    val changeMapNameToPlayerName = BooleanValue(true)
 }

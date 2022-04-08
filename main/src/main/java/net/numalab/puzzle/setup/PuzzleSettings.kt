@@ -11,7 +11,8 @@ data class PuzzleSettings(
     val isShuffle: Boolean,
     val url: URL,
     val assignPieceMode: Boolean,
-    val quitSettingMode: QuitSetting
+    val quitSettingMode: QuitSetting,
+    val renameMap: Boolean
 )
 
 fun PuzzleSettings.setUp() {
