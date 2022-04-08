@@ -9,7 +9,9 @@ data class PuzzleSettings(
     val setter: Player?,
     val size: PuzzleSizeSetting,
     val isShuffle: Boolean,
-    val url: URL
+    val url: URL,
+    val assignPieceMode: Boolean,
+    val quitSettingMode: QuitSetting
 )
 
 fun PuzzleSettings.setUp() {
