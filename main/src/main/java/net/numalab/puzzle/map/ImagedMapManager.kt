@@ -39,7 +39,7 @@ class ImagedMapManager {
         fun get(itemStack: ItemStack): ImagedMap? {
             val meta = itemStack.itemMeta
             if (meta != null) {
-                val uuids = meta.persistentDataContainer.get(nameSpacedKey, PersistentDataType.STRING)
+                val uuids = meta.persistentDataContainer.get(nameSpacedKey, PersistentDataType.STRING) ?: return null
                 val uuid = UUID.fromString(uuids)
                 if (uuid != null) {
                     return imagedMap[uuid]

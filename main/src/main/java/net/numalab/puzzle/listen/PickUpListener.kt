@@ -1,6 +1,7 @@
 package net.numalab.puzzle.listen
 
 import net.numalab.puzzle.map.ImagedMapManager
+import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -15,7 +16,7 @@ class PickUpListener(plugin: Plugin) : Listener {
 
     @EventHandler
     fun onPickUp(e: EntityPickupItemEvent) {
-        if (e.entityType == EntityType.PLAYER) {
+        if (e.entityType == EntityType.PLAYER && (e.item.itemStack.type == Material.MAP || e.item.itemStack.type == Material.FILLED_MAP)) {
             val map = ImagedMapManager.get(e.item.itemStack)
             if (map != null) {
                 val stacks = ImagedMapManager.getAllStack(map)
