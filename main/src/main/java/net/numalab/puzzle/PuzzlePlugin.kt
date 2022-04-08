@@ -28,7 +28,7 @@ class PuzzlePlugin : JavaPlugin() {
 
     init {
         flyLib {
-            command(PuzzleCommand(this@PuzzlePlugin))
+            command(PuzzleCommand(this@PuzzlePlugin, config))
         }
     }
 

@@ -26,7 +26,13 @@ enum class PuzzleSizeSetting(val value: Double) {
     `300%`(3.0),
 
     // 400%
-    `400%`(4.0);
+    `400%`(4.0),
+
+    // 500%
+    `500%`(5.0),
+
+    // 1000%
+    `1000%`(10.0);
 
     fun apply(value: Double): Double {
         return this.value * value

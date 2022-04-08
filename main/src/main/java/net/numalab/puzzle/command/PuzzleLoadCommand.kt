@@ -5,6 +5,7 @@ import dev.kotx.flylib.command.Permission
 import dev.kotx.flylib.command.arguments.StringArgument
 import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.setup.PuzzleSetUpGUI
+import net.numalab.puzzle.setup.setUp
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -24,8 +25,10 @@ class PuzzleLoadCommand(plugin: PuzzlePlugin) : Command("load") {
                     val urlStr = this.typedArgs[0] as String
                     try {
                         val url = URL(urlStr)
-                        val gui = PuzzleSetUpGUI(url, plugin.locationSelector)
-                        gui.main(plugin).open(p)
+                        val gui = PuzzleSetUpGUI(url, plugin.locationSelector, plugin.config.defaultPuzzleSetting)
+                        gui.main(plugin, p) {
+                            it.setUp()
+                        }
                     } catch (e: MalformedURLException) {
                         fail("URLが正しくありません")
                     }
