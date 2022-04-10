@@ -1,7 +1,6 @@
 package net.numalab.puzzle.map.assign
 
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -33,7 +32,7 @@ class MapAssigner private constructor() {
             return result
         }
 
-        fun getAssigned(map: ItemStack): Player? {
+        fun getAssigned(map: ItemStack): UUID? {
             var uuidStr: String? = null
             map.editMeta {
                 uuidStr = it.persistentDataContainer.get(Key, PersistentDataType.STRING)
@@ -41,12 +40,7 @@ class MapAssigner private constructor() {
             return if (uuidStr != null) {
                 try {
                     val uuid = UUID.fromString(uuidStr)
-                    val assignedPlayer = assigned[uuid]
-                    if (assignedPlayer != null) {
-                        Bukkit.getPlayer(assignedPlayer)
-                    } else {
-                        null
-                    }
+                    assigned[uuid]
                 } catch (e: IllegalArgumentException) {
                     null
                 }

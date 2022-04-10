@@ -168,5 +168,10 @@
             <artifactId>ConfigLib</artifactId>
             <version>0.8.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.Bun133</groupId>
+            <artifactId>BukkitFly</artifactId>
+            <version>9beeed6773</version>
+        </dependency>
     </dependencies>
 </project>

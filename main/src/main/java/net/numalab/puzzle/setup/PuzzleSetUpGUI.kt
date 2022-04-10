@@ -1,5 +1,7 @@
 package net.numalab.puzzle.setup
 
+import com.github.bun133.bukkitfly.component.plus
+import com.github.bun133.bukkitfly.component.text
 import com.github.bun133.guifly.gui
 import com.github.bun133.guifly.gui.GUI
 import com.github.bun133.guifly.gui.type.InventoryType
@@ -44,14 +46,14 @@ class PuzzleSetUpGUI(
             QuitSetting.AssignToAll to {
                 ItemStack(Material.FIREWORK_ROCKET).also {
                     it.editMeta { m ->
-                        m.displayName(Component.text("途中抜けした人のピースを再割り当てする"))
+                        m.displayName(text("途中抜けした人のピースを再割り当てする"))
                     }
                 }
             },
             QuitSetting.None to {
                 ItemStack(Material.BARRIER).also {
                     it.editMeta { m ->
-                        m.displayName(Component.text("途中抜けした人のピースを再割り当てしない"))
+                        m.displayName(text("途中抜けした人のピースを再割り当てしない"))
                     }
                 }
             }
@@ -79,25 +81,24 @@ class PuzzleSetUpGUI(
             3,
             2,
             isShuffle,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルしない")) } },
-            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースをシャッフルする")) } }
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("ピースをシャッフルしない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("ピースをシャッフルする")) } }
         ).markAsUnMovable().build()
 
         val assign = BooleanValueItemBuilder(
             4,
             2,
             isAssign,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("ピースを個人に割り当てない")) } },
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("ピースを個人に割り当てない")) } },
             ItemStack(Material.LIME_WOOL).also {
                 it.editMeta { m ->
-                    m.displayName(Component.text("ピースを個人に割り当てる"))
+                    m.displayName(text("ピースを個人に割り当てる"))
                     m.lore(
                         listOf(
-                            Component.text("[注意!]インベントリが")
-                                .color(NamedTextColor.RED)
-                                .append(Component.text("リセットされます").color(NamedTextColor.WHITE)
-                                    .style { s -> s.decorate(TextDecoration.BOLD) })
-                        )
+                            text("[注意!]インベントリが", NamedTextColor.RED) + text(
+                                "リセットされます",
+                                NamedTextColor.WHITE
+                            ).style { s -> s.decorate(TextDecoration.BOLD) })
                     )
                 }
             }
@@ -114,8 +115,8 @@ class PuzzleSetUpGUI(
             6,
             2,
             renameMap,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(Component.text("プレイヤー名をマップ名に変更しない")) } },
-            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("プレイヤー名をマップ名に変更する")) } }
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("マップ名をプレイヤー名に変更しない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("マップ名をプレイヤー名に変更する")) } }
         ).markAsUnMovable().build()
 
         val gui = gui(plugin) {
@@ -129,7 +130,7 @@ class PuzzleSetUpGUI(
 
             item(9, 3) {
                 markAsUnMovable()
-                stack(ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(Component.text("決定")) } })
+                stack(ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("決定")) } })
                 click { e ->
                     e.whoClicked.closeInventory()
                     onConfirm(e.whoClicked as Player)
