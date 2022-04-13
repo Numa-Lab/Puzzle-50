@@ -171,7 +171,7 @@
         <dependency>
             <groupId>com.github.Bun133</groupId>
             <artifactId>BukkitFly</artifactId>
-            <version>9beeed6773</version>
+            <version>95a9922341</version>
         </dependency>
     </dependencies>
 </project>
