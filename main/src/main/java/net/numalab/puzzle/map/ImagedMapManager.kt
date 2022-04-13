@@ -52,6 +52,8 @@ class ImagedMapManager {
             return stackMap[map.piece.uuid]?.toMutableList() ?: listOf()
         }
 
+        fun getAllStack() = stackMap.values.flatten()
+
         fun reset() {
             imagedMap.clear()
         }

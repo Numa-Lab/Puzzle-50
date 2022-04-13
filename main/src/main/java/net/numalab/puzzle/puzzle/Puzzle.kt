@@ -5,6 +5,7 @@ package net.numalab.puzzle.puzzle
  */
 class Puzzle(val width: Int, val height: Int) {
     val arr = Array(width) { Array<Piece?>(height) { null } }
+    val attributes = mutableListOf<Any>()
     operator fun set(x: Int, y: Int, piece: Piece?) {
         arr[x][y] = piece
     }

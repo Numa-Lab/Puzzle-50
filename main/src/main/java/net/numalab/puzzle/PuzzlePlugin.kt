@@ -2,10 +2,7 @@ package net.numalab.puzzle
 
 import dev.kotx.flylib.flyLib
 import net.numalab.puzzle.command.PuzzleCommand
-import net.numalab.puzzle.listen.PickUpListener
-import net.numalab.puzzle.listen.PlaceListener
-import net.numalab.puzzle.listen.RemoveListener
-import net.numalab.puzzle.listen.RotateListener
+import net.numalab.puzzle.listen.*
 import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.setup.PuzzleLocationSelector
@@ -24,6 +21,7 @@ class PuzzlePlugin : JavaPlugin() {
         RotateListener(this)
         RemoveListener(this)
         PlaceListener(this)
+        QuitListener(this)
     }
 
     init {
