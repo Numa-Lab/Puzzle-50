@@ -64,7 +64,6 @@ class PuzzleSetUpGUI(
     private val isShuffle = Value(defaultSetting.isShuffle.value())
     private val isAssign = Value(defaultSetting.isAssign.value())
     private val quitSetting = Value(defaultSetting.quitSettingMode.value())
-    private val renameMap = Value(defaultSetting.changeMapNameToPlayerName.value())
 
     private fun genGUI(plugin: JavaPlugin): GUI {
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
@@ -111,14 +110,6 @@ class PuzzleSetUpGUI(
             quitItemStackMap.mapValues { v -> v.value() }
         ).markAsUnMovable().build()
 
-        val rename = BooleanValueItemBuilder(
-            6,
-            2,
-            renameMap,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("マップ名をプレイヤー名に変更しない")) } },
-            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("マップ名をプレイヤー名に変更する")) } }
-        ).markAsUnMovable().build()
-
         val gui = gui(plugin) {
             title(Component.text("パズル設定"))
             type(InventoryType.CHEST_3)
@@ -126,7 +117,6 @@ class PuzzleSetUpGUI(
             addItem(shuffle)
             addItem(assign)
             addItem(quit)
-            addItem(rename)
 
             item(9, 3) {
                 markAsUnMovable()
@@ -160,7 +150,7 @@ class PuzzleSetUpGUI(
             url,
             isAssign.value,
             quitSetting.value,
-            renameMap.value
+            defaultSetting.conf.players()
         )
         defaultSetting.applySettings(setting)
         callBack(setting)

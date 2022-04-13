@@ -7,15 +7,21 @@ import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.setup.PuzzleSettings
 import net.numalab.puzzle.setup.PuzzleSizeSetting
 import net.numalab.puzzle.setup.QuitSetting
+import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.net.URL
 
 class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
-    val defaultPuzzleSetting = DefaultPuzzleSetting(plugin)
+    val targetGameMode = EnumValue<GameMode>(GameMode.SURVIVAL)
+
+    fun players() = Bukkit.getOnlinePlayers().filter { it.gameMode == targetGameMode.value() }
+
+    val defaultPuzzleSetting = DefaultPuzzleSetting(plugin, this)
 }
 
-class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
+class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(plugin) {
     fun toSettings(locationSelector: PuzzleLocationSelector, url: URL): PuzzleSettings {
         return PuzzleSettings(
             locationSelector,
@@ -25,7 +31,7 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
             url,
             isAssign.value(),
             quitSettingMode.value(),
-            changeMapNameToPlayerName.value()
+            conf.players()
         )
     }
 
@@ -34,7 +40,6 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
         this.isShuffle.value(settings.isShuffle)
         this.isAssign.value(settings.assignPieceMode)
         this.quitSettingMode.value(settings.quitSettingMode)
-        this.changeMapNameToPlayerName.value(settings.renameMap)
     }
 
     val size = EnumValue<PuzzleSizeSetting>(PuzzleSizeSetting.`100%`)
@@ -44,9 +49,4 @@ class DefaultPuzzleSetting(plugin: Plugin) : BaseConfig(plugin) {
     val isAssign = BooleanValue(false)
 
     val quitSettingMode = EnumValue<QuitSetting>(QuitSetting.None)
-
-    /**
-     * マップをプレイヤーの名前にリーネームするか(割り当てモード時)
-     */
-    val changeMapNameToPlayerName = BooleanValue(true)
 }

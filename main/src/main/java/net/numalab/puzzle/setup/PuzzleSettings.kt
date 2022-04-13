@@ -12,7 +12,7 @@ data class PuzzleSettings(
     val url: URL,
     val assignPieceMode: Boolean,
     val quitSettingMode: QuitSetting,
-    val renameMap: Boolean
+    val targetPlayers:List<Player>
 )
 
 fun PuzzleSettings.setUp() {
