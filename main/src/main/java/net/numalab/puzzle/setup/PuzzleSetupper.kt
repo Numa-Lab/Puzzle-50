@@ -1,6 +1,8 @@
 package net.numalab.puzzle.setup
 
+import com.github.bun133.bukkitfly.component.text
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.numalab.puzzle.gen.DefaultPuzzleGenerator
 import net.numalab.puzzle.gen.PuzzleGenerateSetting
 import net.numalab.puzzle.geo.FrameFiller
@@ -14,6 +16,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.awt.image.BufferedImage
 import kotlin.math.ceil
 
 class PuzzleSetupper {
@@ -35,13 +38,19 @@ class PuzzleSetupper {
             player.sendMessage("" + ChatColor.RED + "画像の読み込みに失敗しました")
             return
         }
-        player.sendMessage("" + ChatColor.GREEN + "画像読み込み完了")
+        val resizedImage: BufferedImage?
+        try {
+            resizedImage =
+                ImageResizer().resize(
+                    img, sizeValue.apply(img.width.toDouble()).toInt(),
+                    sizeValue.apply(img.height.toDouble()).toInt()
+                )
+        } catch (e: java.lang.IllegalArgumentException) {
+            player.sendMessage("" + ChatColor.RED + "画像の読み込みに失敗しました")
+            return
+        }
 
-        val resizedImage =
-            ImageResizer().resize(
-                img, sizeValue.apply(img.width.toDouble()).toInt(),
-                sizeValue.apply(img.height.toDouble()).toInt()
-            )
+        player.sendMessage("" + ChatColor.GREEN + "画像読み込み完了")
 
         val split = ImageSplitter().split(resizedImage, 128, 128)
 
@@ -74,15 +83,18 @@ class PuzzleSetupper {
 
         if (settings.assignPieceMode) {
             player.sendMessage("" + ChatColor.GREEN + "ピース割り当て中...")
-            assignToPlayers(finalStacks, Bukkit.getOnlinePlayers().toList(), settings.renameMap)
+            if (!assignToPlayers(finalStacks, settings.targetPlayers)) {
+                return
+            }
             when (settings.quitSettingMode) {
                 QuitSetting.AssignToAll -> {
-                    player.sendMessage("" + ChatColor.GREEN + "プレイヤーを退出します")
+                    player.sendMessage(text("退出時に再割り当てが行われます", NamedTextColor.DARK_RED))
                 }
                 QuitSetting.None -> {
-                    player.sendMessage("" + ChatColor.GREEN + "退出時に再割り当ては行われません")
+                    player.sendMessage(text("退出時に再割り当ては行われません", NamedTextColor.DARK_RED))
                 }
             }
+            imagedPuzzle.puzzle.attributes.add(settings.quitSettingMode)
 
             player.sendMessage(Component.empty())
 
@@ -116,13 +128,17 @@ class PuzzleSetupper {
      * プレイヤーに割り当てて、スタックを渡す。(インベントリに入りきらなければドロップする)
      * @return if success
      */
-    private fun assignToPlayers(pieces: List<ItemStack>, players: List<Player>, rename: Boolean) {
+    private fun assignToPlayers(pieces: List<ItemStack>, players: List<Player>): Boolean {
+        if (players.isEmpty()) {
+            Bukkit.broadcast(text("割り当て先のプレイヤーがみつかりませんでした(ゲームモードを変更してください)", NamedTextColor.RED))
+            return false
+        }
         pieces.chunked((pieces.size.toDouble() / players.size.toDouble()).toInt()).forEachIndexed { index, list ->
             if (index <= players.lastIndex) {
                 val player = players[index]
                 player.inventory.clear()
                 list.forEach { map ->
-                    MapAssigner.assign(map, player, rename)
+                    MapAssigner.assign(map, player, true)
                     val notAdded = player.inventory.addItem(map)
                     notAdded.forEach { (_, u) ->
                         player.world.dropItem(player.location, u)
@@ -132,7 +148,7 @@ class PuzzleSetupper {
                 // あまりの分
                 list.forEach { map ->
                     val player = players.random()
-                    MapAssigner.assign(map, player, rename)
+                    MapAssigner.assign(map, player, true)
                     val notAdded = player.inventory.addItem(map)
                     notAdded.forEach { (_, u) ->
                         player.world.dropItem(player.location, u)
@@ -140,5 +156,7 @@ class PuzzleSetupper {
                 }
             }
         }
+
+        return true
     }
 }
