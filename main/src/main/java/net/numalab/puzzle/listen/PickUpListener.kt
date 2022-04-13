@@ -4,6 +4,7 @@ import com.github.bun133.bukkitfly.component.plus
 import com.github.bun133.bukkitfly.component.text
 import com.github.bun133.bukkitfly.entity.human.kill
 import net.kyori.adventure.text.Component
+import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.map.assign.MapAssigner
 import org.bukkit.Material
@@ -17,7 +18,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.UUID
 
-class PickUpListener(val plugin: JavaPlugin) : Listener {
+class PickUpListener(val plugin: PuzzlePlugin) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
@@ -26,7 +27,7 @@ class PickUpListener(val plugin: JavaPlugin) : Listener {
     fun onPickUp(e: EntityPickupItemEvent) {
         if (e.entityType == EntityType.PLAYER && (e.item.itemStack.type == Material.MAP || e.item.itemStack.type == Material.FILLED_MAP)) {
             val assigned = MapAssigner.getAssigned(e.item.itemStack)
-            if (assigned != null && assigned != e.entity.uniqueId) {
+            if (assigned != null && assigned != e.entity.uniqueId && (e.entity as Player).gameMode == plugin.config.targetGameMode.value()) {
                 // 他の人のマップを拾った
                 e.isCancelled = true
                 (e.entity as HumanEntity).kill(plugin, deathComponent(e.entity as HumanEntity, assigned))
