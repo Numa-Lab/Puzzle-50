@@ -1,15 +1,14 @@
 package net.numalab.puzzle.listen
 
+import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.map.ImagedMapManager
-import org.bukkit.Material
+import net.numalab.puzzle.map.assign.MapAssigner
 import org.bukkit.entity.ItemFrame
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
 
-class RotateListener(val plugin: Plugin) : Listener {
+class RotateListener(val plugin: PuzzlePlugin) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }

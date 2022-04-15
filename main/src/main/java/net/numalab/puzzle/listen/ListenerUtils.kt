@@ -2,6 +2,7 @@ package net.numalab.puzzle.listen
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.puzzle.ImagedPuzzleManager
 import net.numalab.puzzle.puzzle.Puzzle
@@ -46,4 +47,8 @@ fun item(item: ItemStack, frame: ItemFrame) {
             map.updateStack(it, frame, frame.rotation)
         }
     }
+}
+
+fun Material.isMap(): Boolean {
+    return this == Material.MAP || this == Material.FILLED_MAP
 }

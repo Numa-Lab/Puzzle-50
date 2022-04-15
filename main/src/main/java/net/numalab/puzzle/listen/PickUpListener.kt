@@ -26,6 +26,8 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
     @EventHandler
     fun onPickUp(e: EntityPickupItemEvent) {
         if (e.entityType == EntityType.PLAYER && (e.item.itemStack.type == Material.MAP || e.item.itemStack.type == Material.FILLED_MAP)) {
+            updateEmphasize(e.entity as Player)
+
             val assigned = MapAssigner.getAssigned(e.item.itemStack)
             if (assigned != null && assigned != e.entity.uniqueId && (e.entity as Player).gameMode == plugin.config.targetGameMode.value()) {
                 // 他の人のマップを拾った
@@ -52,5 +54,11 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
         } else {
             (toDeath as Player).displayName() + text("は他人のピースを拾ったので死亡した。")
         }
+    }
+
+    private fun updateEmphasize(player: Player) {
+        plugin.server.scheduler.runTaskLater(plugin, Runnable {
+            plugin.emphasize.updatePlayer(player)
+        }, 1)
     }
 }

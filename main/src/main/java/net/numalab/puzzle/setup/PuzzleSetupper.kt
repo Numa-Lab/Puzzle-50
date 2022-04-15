@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.numalab.puzzle.gen.DefaultPuzzleGenerator
 import net.numalab.puzzle.gen.PuzzleGenerateSetting
 import net.numalab.puzzle.geo.FrameFiller
+import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.img.ImageLoader
 import net.numalab.puzzle.img.ImageResizer
 import net.numalab.puzzle.img.ImageSplitter
@@ -97,29 +98,21 @@ class PuzzleSetupper {
             imagedPuzzle.puzzle.attributes.add(settings.quitSettingMode)
 
             player.sendMessage(Component.empty())
+        }
 
-            player.sendMessage("" + ChatColor.GREEN + "ブロックをクリックして開始位置を指定してください")
+        player.sendMessage("" + ChatColor.GREEN + "ブロックをクリックして開始位置を指定してください")
 
-            settings.locationSelector.addQueue(player.uniqueId) { p, loc ->
-                val b =
-                    FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
-                if (b) {
-                    p.sendMessage("一部の額縁の設置に失敗しました。平らな場所でもう一度試してください。")
-                } else {
-                    p.sendMessage("パズルの開始位置を設定しました")
-                }
+        settings.locationSelector.addQueue(player.uniqueId) { p, loc ->
+            val b = if (settings.assignPieceMode) {
+                FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
+            } else {
+                FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).set(finalStacks)
             }
-        } else {
-            player.sendMessage("" + ChatColor.GREEN + "ブロックをクリックして開始位置を指定してください")
 
-            settings.locationSelector.addQueue(player.uniqueId) { p, loc ->
-                val b =
-                    FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).set(finalStacks)
-                if (b) {
-                    p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
-                } else {
-                    p.sendMessage("パズルの開始位置を設定しました")
-                }
+            if (b) {
+                p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
+            } else {
+                p.sendMessage("パズルの開始位置を設定しました")
             }
         }
     }

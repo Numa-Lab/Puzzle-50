@@ -1,8 +1,7 @@
 package net.numalab.puzzle.map.assign
 
-import com.github.bun133.bukkitfly.component.text
-import com.github.bun133.bukkitfly.stack.rename
-import net.kyori.adventure.text.Component
+import net.numalab.puzzle.map.ImagedMapManager
+import net.numalab.puzzle.puzzle.Puzzle
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -12,6 +11,8 @@ import java.util.UUID
 class MapAssigner private constructor() {
     companion object {
         private val Key = NamespacedKey("puzzle", "map-assigner")
+
+        // PersistentData(UUID) : Player.uniqueId
         private val assigned = mutableMapOf<UUID, UUID>()
 
         /**
@@ -73,6 +74,14 @@ class MapAssigner private constructor() {
             } else {
                 null
             }
+        }
+
+        // インベントリの中にピースがあるかどうか
+        fun isCompleted(player: Player, lookFor: Puzzle): Boolean {
+            return player.inventory.contents.filterNotNull().filter {
+                val piece = ImagedMapManager.get(it) ?: return@filter false
+                piece.piece.puzzle == lookFor
+            }.isEmpty()
         }
     }
 }

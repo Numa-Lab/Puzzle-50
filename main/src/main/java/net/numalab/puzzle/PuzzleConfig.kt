@@ -16,7 +16,7 @@ import java.net.URL
 class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
     val targetGameMode = EnumValue<GameMode>(GameMode.SURVIVAL)
 
-    fun players() = Bukkit.getOnlinePlayers().filter { it.gameMode == targetGameMode.value() }
+    fun players() = Bukkit.getOnlinePlayers().filter { it.gameMode == targetGameMode.value() }.filterNotNull()
 
     val defaultPuzzleSetting = DefaultPuzzleSetting(plugin, this)
 }
