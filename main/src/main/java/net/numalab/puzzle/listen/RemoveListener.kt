@@ -32,7 +32,7 @@ class RemoveListener(val plugin: JavaPlugin) : Listener {
                     }
                     itemNot(en.item)
 
-                    checkSolved(en,e.damager as Player)
+                    checkSolved(en,e.damager as Player,plugin)
                 },1L)
             }
         }

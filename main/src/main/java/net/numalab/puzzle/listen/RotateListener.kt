@@ -27,7 +27,7 @@ class RotateListener(val plugin: PuzzlePlugin) : Listener {
                         update(itemFrame)
                     }
 
-                    checkSolved(e.rightClicked as ItemFrame, e.player)
+                    checkSolved(e.rightClicked as ItemFrame, e.player,plugin)
                 }, 1)
             }
         }

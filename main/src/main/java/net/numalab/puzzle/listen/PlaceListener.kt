@@ -30,7 +30,7 @@ class PlaceListener(val plugin: PuzzlePlugin) : Listener {
                         update(it)
                     }
 
-                    checkSolved(en, e.player)
+                    checkSolved(en, e.player,plugin)
                     updateEmphasize(en, e.player)
                 }, 1)
             }

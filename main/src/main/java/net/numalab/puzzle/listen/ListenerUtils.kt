@@ -9,24 +9,25 @@ import org.bukkit.Material
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 
 fun isSolved(puzzle: Puzzle): Boolean {
     val imagedPuzzle = ImagedPuzzleManager.get(puzzle)
     return imagedPuzzle?.isSolved() ?: false
 }
 
-fun checkSolved(puzzle: Puzzle, location: Location, player: Player) {
+fun checkSolved(puzzle: Puzzle, location: Location, player: Player,plugin: Plugin) {
     val isSolved = isSolved(puzzle)
     if (isSolved) {
-        onSolved(puzzle, location, player)
+        onSolved(puzzle, location, player,plugin)
     }
 }
 
-fun checkSolved(itemFrame: ItemFrame, player: Player) {
+fun checkSolved(itemFrame: ItemFrame, player: Player,plugin: Plugin) {
     val item = itemFrame.item
     if (item.type.isEmpty) return
     val map = ImagedMapManager.get(item) ?: return
-    checkSolved(map.piece.puzzle, itemFrame.location, player)
+    checkSolved(map.piece.puzzle, itemFrame.location, player,plugin)
 }
 
 fun update(itemFrame: ItemFrame) {

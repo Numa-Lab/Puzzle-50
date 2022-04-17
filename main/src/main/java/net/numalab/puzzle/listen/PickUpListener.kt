@@ -42,7 +42,7 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
                     map.updateStack(it, null, null)
                 }
 
-                checkSolved(map.piece.puzzle, e.entity.location, e.entity as Player)
+                checkSolved(map.piece.puzzle, e.entity.location, e.entity as Player, plugin)
             }
         }
     }
