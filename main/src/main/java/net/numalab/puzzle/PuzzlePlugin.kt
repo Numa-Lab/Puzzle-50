@@ -10,6 +10,7 @@ import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.puzzle.Puzzle
 import net.numalab.puzzle.setup.PuzzleLocationSelector
+import net.numalab.puzzle.solved.InteractPrevent
 import org.bukkit.plugin.java.JavaPlugin
 
 class PuzzlePlugin : JavaPlugin() {
@@ -31,6 +32,7 @@ class PuzzlePlugin : JavaPlugin() {
         PlaceListener(this)
         QuitListener(this)
         DropListener(this)
+        InteractPrevent(this)
     }
 
     init {

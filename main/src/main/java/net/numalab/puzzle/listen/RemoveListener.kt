@@ -20,6 +20,7 @@ class RemoveListener(val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun onRemove(e: EntityDamageByEntityEvent) {
+        if (e.isCancelled) return
         if (e.entityType == EntityType.ITEM_FRAME && e.damager.type == EntityType.PLAYER) {
             val en = e.entity
             if (en is ItemFrame) {

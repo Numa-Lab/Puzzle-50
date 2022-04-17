@@ -1,12 +1,9 @@
 package net.numalab.puzzle.listen
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.map.ImagedMapManager
+import net.numalab.puzzle.solved.onSolved
 import net.numalab.puzzle.puzzle.ImagedPuzzleManager
 import net.numalab.puzzle.puzzle.Puzzle
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ItemFrame
@@ -21,8 +18,7 @@ fun isSolved(puzzle: Puzzle): Boolean {
 fun checkSolved(puzzle: Puzzle, location: Location, player: Player) {
     val isSolved = isSolved(puzzle)
     if (isSolved) {
-        Bukkit.broadcast(Component.text("パズルが完成しました").color(NamedTextColor.GREEN))
-        Bukkit.broadcast(player.displayName().color(NamedTextColor.GREEN).append(Component.text("がパズルを完成しました!")))
+        onSolved(puzzle, location, player)
     }
 }
 

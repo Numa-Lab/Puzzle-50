@@ -19,6 +19,7 @@ class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
     fun players() = Bukkit.getOnlinePlayers().filter { it.gameMode == targetGameMode.value() }.filterNotNull()
 
     val defaultPuzzleSetting = DefaultPuzzleSetting(plugin, this)
+    val lockPuzzleAfterSolved = BooleanValue(true)
 }
 
 class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(plugin) {

@@ -15,6 +15,7 @@ class RotateListener(val plugin: PuzzlePlugin) : Listener {
 
     @EventHandler
     fun onClick(e: PlayerInteractEntityEvent) {
+        if (e.isCancelled) return
         if (e.rightClicked is ItemFrame) {
             val item = (e.rightClicked as ItemFrame).item
             if (!item.type.isEmpty) {
