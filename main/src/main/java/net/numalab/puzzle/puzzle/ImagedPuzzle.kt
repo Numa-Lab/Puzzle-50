@@ -16,5 +16,5 @@ class ImagedPuzzle(val puzzle: Puzzle, val baseImageSet: List<ImagedMap>) {
         }
     }
 
-    fun isSolved() = baseImageSet.all { it.isSolved }
+    fun isSolved() = baseImageSet.all { it.isSolved } && baseImageSet.isNotEmpty()
 }

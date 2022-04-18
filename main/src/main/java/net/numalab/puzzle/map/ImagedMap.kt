@@ -149,10 +149,10 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
             drawRightOverLay(copy)
         }
 
-        isSolved = (!isUpOverlay || piece.top == PieceSideType.NONE) &&
-                (!isRightOverlay || piece.right == PieceSideType.NONE) &&
-                (!isDownOverlay || piece.bottom == PieceSideType.NONE) &&
-                (!isLeftOverlay || piece.left == PieceSideType.NONE)
+        isSolved = (!isUpOverlay || piece.top == PieceSideType.NONE && toRotation != null) &&
+                (!isRightOverlay || piece.right == PieceSideType.NONE && toRotation != null) &&
+                (!isDownOverlay || piece.bottom == PieceSideType.NONE && toRotation != null) &&
+                (!isLeftOverlay || piece.left == PieceSideType.NONE && toRotation != null)
 
         return copy
     }
