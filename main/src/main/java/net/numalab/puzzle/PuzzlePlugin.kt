@@ -29,12 +29,12 @@ class PuzzlePlugin : JavaPlugin() {
         locationSelector = PuzzleLocationSelector(this)
         emphasizeSelector = EmphasizeSelector(this)
         PickUpListener(this)
-        RotateListener(this)
-        RemoveListener(this)
         PlaceListener(this)
         QuitListener(this)
         DropListener(this)
-        InteractPrevent(this)
+        InteractPrevent(
+            this, RotateListener(this), RemoveListener(this)
+        )
     }
 
     init {

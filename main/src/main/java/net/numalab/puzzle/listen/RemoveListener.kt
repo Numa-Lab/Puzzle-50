@@ -14,11 +14,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 class RemoveListener(val plugin: JavaPlugin) : Listener {
-    init {
-        plugin.server.pluginManager.registerEvents(this, plugin)
-    }
-
-    @EventHandler
     fun onRemove(e: EntityDamageByEntityEvent) {
         if (e.isCancelled) return
         if (e.entityType == EntityType.ITEM_FRAME && e.damager.type == EntityType.PLAYER) {
@@ -31,8 +26,6 @@ class RemoveListener(val plugin: JavaPlugin) : Listener {
                         update(it)
                     }
                     itemNot(en.item)
-
-                    checkSolved(en,e.damager as Player,plugin)
                 },1L)
             }
         }

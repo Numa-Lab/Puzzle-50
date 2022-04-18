@@ -16,18 +16,28 @@ fun isSolved(puzzle: Puzzle): Boolean {
     return imagedPuzzle?.isSolved() ?: false
 }
 
-fun checkSolved(puzzle: Puzzle, location: Location, player: Player,plugin: Plugin) {
+fun Puzzle.isCelebrated(): Boolean {
+    return this.attributes.find { it is Boolean } as Boolean? ?: false
+}
+
+fun Puzzle.setCelebrated(b: Boolean) {
+    this.attributes.removeAll { it is Boolean }
+    this.attributes.add(b)
+}
+
+fun checkSolved(puzzle: Puzzle, location: Location, player: Player, plugin: Plugin) {
     val isSolved = isSolved(puzzle)
-    if (isSolved) {
-        onSolved(puzzle, location, player,plugin)
+    if (isSolved && !puzzle.isCelebrated()) {
+        puzzle.setCelebrated(true)
+        onSolved(puzzle, location, player, plugin)
     }
 }
 
-fun checkSolved(itemFrame: ItemFrame, player: Player,plugin: Plugin) {
+fun checkSolved(itemFrame: ItemFrame, player: Player, plugin: Plugin) {
     val item = itemFrame.item
     if (item.type.isEmpty) return
     val map = ImagedMapManager.get(item) ?: return
-    checkSolved(map.piece.puzzle, itemFrame.location, player,plugin)
+    checkSolved(map.piece.puzzle, itemFrame.location, player, plugin)
 }
 
 fun update(itemFrame: ItemFrame) {

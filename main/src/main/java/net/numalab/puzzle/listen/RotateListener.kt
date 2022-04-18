@@ -8,12 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEntityEvent
 
-class RotateListener(val plugin: PuzzlePlugin) : Listener {
-    init {
-        plugin.server.pluginManager.registerEvents(this, plugin)
-    }
-
-    @EventHandler
+class RotateListener(val plugin: PuzzlePlugin) {
     fun onClick(e: PlayerInteractEntityEvent) {
         if (e.isCancelled) return
         if (e.rightClicked is ItemFrame) {
@@ -26,8 +21,6 @@ class RotateListener(val plugin: PuzzlePlugin) : Listener {
                     for (itemFrame in toUpdate) {
                         update(itemFrame)
                     }
-
-                    checkSolved(e.rightClicked as ItemFrame, e.player,plugin)
                 }, 1)
             }
         }
