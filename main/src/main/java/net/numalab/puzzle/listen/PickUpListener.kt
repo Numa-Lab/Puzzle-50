@@ -32,7 +32,6 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
             if (assigned != null && assigned != e.entity.uniqueId && (e.entity as Player).gameMode == plugin.config.targetGameMode.value()) {
                 // 他の人のマップを拾った
                 e.isCancelled = true
-                (e.entity as HumanEntity).kill(plugin, deathComponent(e.entity as HumanEntity, assigned))
             }
 
             val map = ImagedMapManager.get(e.item.itemStack)
