@@ -3,6 +3,7 @@ package net.numalab.puzzle
 import net.kunmc.lab.configlib.BaseConfig
 import net.kunmc.lab.configlib.value.BooleanValue
 import net.kunmc.lab.configlib.value.EnumValue
+import net.kunmc.lab.configlib.value.collection.TeamSetValue
 import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.setup.PuzzleSettings
 import net.numalab.puzzle.setup.PuzzleSizeSetting
@@ -11,6 +12,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.scoreboard.Team
 import java.net.URL
 
 class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
@@ -18,22 +20,45 @@ class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
 
     fun players() = Bukkit.getOnlinePlayers().filter { it.gameMode == targetGameMode.value() }.filterNotNull()
 
+    val targetTeams = TeamSetValue()
+
     val defaultPuzzleSetting = DefaultPuzzleSetting(plugin, this)
     val lockPuzzleAfterSolved = BooleanValue(true)
+
+    fun teams(): List<List<Player>> {
+        return players()
+            .groupBy { Bukkit.getScoreboardManager().mainScoreboard.getEntryTeam(it.name) }
+            .filterKeys { it != null }
+            .filterKeys { targetTeams.value().contains(it) }
+            .values.toList()
+    }
 }
 
 class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(plugin) {
     fun toSettings(locationSelector: PuzzleLocationSelector, url: URL): PuzzleSettings {
-        return PuzzleSettings(
-            locationSelector,
-            null,
-            size.value(),
-            isShuffle.value(),
-            url,
-            isAssign.value(),
-            quitSettingMode.value(),
-            conf.players()
-        )
+        return if (isTeamMode.value()) {
+            PuzzleSettings(
+                locationSelector,
+                null,
+                size.value(),
+                isShuffle.value(),
+                url,
+                isAssign.value(),
+                quitSettingMode.value(),
+                conf.teams()
+            )
+        } else {
+            PuzzleSettings(
+                locationSelector,
+                null,
+                size.value(),
+                isShuffle.value(),
+                url,
+                isAssign.value(),
+                quitSettingMode.value(),
+                listOf(conf.players())
+            )
+        }
     }
 
     fun applySettings(settings: PuzzleSettings) {
@@ -50,4 +75,6 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
     val isAssign = BooleanValue(false)
 
     val quitSettingMode = EnumValue<QuitSetting>(QuitSetting.None)
+
+    val isTeamMode = BooleanValue(false)
 }

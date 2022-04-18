@@ -12,7 +12,8 @@ data class PuzzleSettings(
     val url: URL,
     val assignPieceMode: Boolean,
     val quitSettingMode: QuitSetting,
-    val targetPlayers:List<Player>
+    // 複数チームいるときは入れ子にする
+    val targetPlayers: List<List<Player>>
 )
 
 fun PuzzleSettings.setUp() {

@@ -1,6 +1,7 @@
 package net.numalab.puzzle.setup
 
 import com.github.bun133.bukkitfly.component.text
+import com.github.bun133.bukkitfly.stack.addOrDrop
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.numalab.puzzle.gen.DefaultPuzzleGenerator
@@ -27,6 +28,13 @@ class PuzzleSetupper {
             println("[ERROR] player is null")
             return
         }
+
+        if (settings.targetPlayers.isEmpty()) {
+            player.sendMessage(text("チームが登録されていません", NamedTextColor.RED))
+            return
+        }
+
+
         val sizeValue = settings.size
         val url = settings.url
         val isShuffle = settings.isShuffle
@@ -84,9 +92,14 @@ class PuzzleSetupper {
 
         if (settings.assignPieceMode) {
             player.sendMessage("" + ChatColor.GREEN + "ピース割り当て中...")
-            if (!assignToPlayers(finalStacks, settings.targetPlayers)) {
-                return
+            settings.targetPlayers.forEach { target ->
+                val f = finalStacks.map { it.clone() }
+                if (!assignToPlayers(f, target)) {
+                    return
+                }
+                imagedPuzzle.puzzle.attributes.add(settings.quitSettingMode)
             }
+
             when (settings.quitSettingMode) {
                 QuitSetting.AssignToAll -> {
                     player.sendMessage(text("退出時に再割り当てが行われます", NamedTextColor.DARK_RED))
@@ -95,14 +108,12 @@ class PuzzleSetupper {
                     player.sendMessage(text("退出時に再割り当ては行われません", NamedTextColor.DARK_RED))
                 }
             }
-            imagedPuzzle.puzzle.attributes.add(settings.quitSettingMode)
-
             player.sendMessage(Component.empty())
         }
 
-        player.sendMessage("" + ChatColor.GREEN + "ブロックをクリックして開始位置を指定してください")
+        sendPlaceMessage(player, settings.targetPlayers.size - 1, settings.targetPlayers.size)
 
-        settings.locationSelector.addQueue(player.uniqueId) { p, loc ->
+        settings.locationSelector.addQueue(player.uniqueId, settings.targetPlayers.size) { p, loc, remainTimes: Int ->
             val b = if (settings.assignPieceMode) {
                 FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
             } else {
@@ -111,8 +122,13 @@ class PuzzleSetupper {
 
             if (b) {
                 p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
+                return@addQueue false
             } else {
                 p.sendMessage("パズルの開始位置を設定しました")
+                if (remainTimes > 0) {
+                    sendPlaceMessage(player, settings.targetPlayers.size - remainTimes + 1, settings.targetPlayers.size)
+                }
+                return@addQueue true
             }
         }
     }
@@ -132,24 +148,42 @@ class PuzzleSetupper {
                 player.inventory.clear()
                 list.forEach { map ->
                     MapAssigner.assign(map, player, true)
-                    val notAdded = player.inventory.addItem(map)
-                    notAdded.forEach { (_, u) ->
-                        player.world.dropItem(player.location, u)
-                    }
+                    player.inventory.addOrDrop(map)
                 }
             } else {
                 // あまりの分
                 list.forEach { map ->
                     val player = players.random()
                     MapAssigner.assign(map, player, true)
-                    val notAdded = player.inventory.addItem(map)
-                    notAdded.forEach { (_, u) ->
-                        player.world.dropItem(player.location, u)
-                    }
+                    player.inventory.addOrDrop(map)
                 }
             }
         }
 
         return true
+    }
+
+    private fun sendPlaceMessage(player: Player, remainTimes: Int, allTimes: Int) {
+        when (allTimes) {
+            1 -> {
+                player.sendMessage(text("ブロックをクリックして開始位置を指定してください", NamedTextColor.GREEN))
+            }
+
+            else -> {
+                when (remainTimes) {
+                    0 -> {
+
+                    }
+                    else -> {
+                        player.sendMessage(
+                            text(
+                                "ブロックをクリックして開始位置を指定してください[${remainTimes}/${allTimes}]",
+                                NamedTextColor.GREEN
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }

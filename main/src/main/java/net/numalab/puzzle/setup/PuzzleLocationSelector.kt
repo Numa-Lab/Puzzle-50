@@ -15,19 +15,27 @@ class PuzzleLocationSelector(plugin: JavaPlugin) : Listener {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
 
-    private val queue = mutableMapOf<UUID, (Player, Location) -> Unit>()
+    private val queue = mutableMapOf<UUID, Pair<(Player, Location, Int) -> Boolean, Int>>()
 
     @EventHandler
     fun onRightClick(e: PlayerInteractEvent) {
         if (e.action == Action.LEFT_CLICK_BLOCK || e.action == Action.RIGHT_CLICK_BLOCK) {
             queue.remove(e.player.uniqueId)?.let {
-                it(e.player,e.clickedBlock!!.location)
+                val to = it.second - 1
+                val result = it.first(e.player, e.clickedBlock!!.location, to)
+                if (result) {
+                    if (to > 0) {
+                        queue[e.player.uniqueId] = it.copy(second = to)
+                    }
+                } else {
+                    queue[e.player.uniqueId] = it
+                }
             }
         }
     }
 
-    fun addQueue(uuid: UUID, callBack: (Player, Location) -> Unit) {
-        queue[uuid] = callBack
+    fun addQueue(uuid: UUID, times: Int, callBack: (Player, Location, Int) -> Boolean) {
+        queue[uuid] = callBack to times
     }
 
 

@@ -16,16 +16,22 @@ import net.numalab.puzzle.solved.InteractPrevent
 import org.bukkit.plugin.java.JavaPlugin
 
 class PuzzlePlugin : JavaPlugin() {
-    val config = PuzzleConfig(this).also {
-        it.saveConfigIfAbsent()
-        it.loadConfig()
-    }
+    lateinit var config: PuzzleConfig
 
     lateinit var locationSelector: PuzzleLocationSelector
     lateinit var emphasizeSelector: EmphasizeSelector
     val emphasize = Emphasize(Value(null), this)
 
     override fun onEnable() {
+        config = PuzzleConfig(this).also {
+            it.saveConfigIfAbsent()
+            it.loadConfig()
+        }
+
+        flyLib {
+            command(PuzzleCommand(this@PuzzlePlugin, config))
+        }
+
         locationSelector = PuzzleLocationSelector(this)
         emphasizeSelector = EmphasizeSelector(this)
         PickUpListener(this)
@@ -35,12 +41,6 @@ class PuzzlePlugin : JavaPlugin() {
         InteractPrevent(
             this, RotateListener(this), RemoveListener(this)
         )
-    }
-
-    init {
-        flyLib {
-            command(PuzzleCommand(this@PuzzlePlugin, config))
-        }
     }
 
     override fun onDisable() {
