@@ -83,5 +83,9 @@ class MapAssigner private constructor() {
                 piece.piece.puzzle == lookFor
             }.isEmpty()
         }
+
+        fun reset(){
+            assigned.clear()
+        }
     }
 }

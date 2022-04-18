@@ -8,6 +8,8 @@ import net.numalab.puzzle.hint.EmphasizeSelector
 import net.numalab.puzzle.listen.*
 import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.map.ImagedMapManager
+import net.numalab.puzzle.map.assign.MapAssigner
+import net.numalab.puzzle.puzzle.ImagedPuzzleManager
 import net.numalab.puzzle.puzzle.Puzzle
 import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.solved.InteractPrevent
@@ -50,5 +52,8 @@ class PuzzlePlugin : JavaPlugin() {
         locationSelector.reset()
         emphasizeSelector.reset()
         ImagedMapManager.reset()
+        MapAssigner.reset()
+        emphasize.puzzle.value = null
+        ImagedPuzzleManager.reset()
     }
 }

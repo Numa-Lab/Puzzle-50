@@ -15,5 +15,9 @@ class ImagedPuzzleManager {
         fun get(piece: Piece): ImagedPuzzle? {
             return this.puzzle[piece.puzzle]
         }
+
+        fun reset() {
+            this.puzzle.clear()
+        }
     }
 }

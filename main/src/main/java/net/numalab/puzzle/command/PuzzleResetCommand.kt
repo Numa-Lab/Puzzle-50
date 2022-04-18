@@ -12,10 +12,10 @@ class PuzzleResetCommand(plugin: PuzzlePlugin) : Command("reset") {
             executes {
                 val s = typedArgs[0] as String
                 if (s == "really") {
-                    sender.sendMessage("リセットします")
+                    success("リセットしました")
                     plugin.reset()
                 } else {
-                    sender.sendMessage("リセットしません")
+                    fail("リセットする場合は、reallyを指定してください")
                 }
             }
         }

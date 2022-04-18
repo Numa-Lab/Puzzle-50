@@ -10,6 +10,7 @@ class PuzzleCommand(val plugin: PuzzlePlugin, config: PuzzleConfig) : Command("p
         description("Puzzle command")
         children(
             PuzzleLoadCommand(plugin),
+            PuzzleResetCommand(plugin),
             ConfigCommandBuilder(config).addConfig(config.defaultPuzzleSetting).build()
         )
 
