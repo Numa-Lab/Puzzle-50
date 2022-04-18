@@ -84,7 +84,7 @@ class MapAssigner private constructor() {
             }.isEmpty()
         }
 
-        fun reset(){
+        fun reset() {
             assigned.clear()
         }
     }

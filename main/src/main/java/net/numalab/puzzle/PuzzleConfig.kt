@@ -66,6 +66,7 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
         this.isShuffle.value(settings.isShuffle)
         this.isAssign.value(settings.assignPieceMode)
         this.quitSettingMode.value(settings.quitSettingMode)
+        this.isTeamMode.value(settings.targetPlayers.size != 1)
     }
 
     val size = EnumValue<PuzzleSizeSetting>(PuzzleSizeSetting.`100%`)

@@ -14,12 +14,16 @@ import net.numalab.puzzle.img.ImageSplitter
 import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.map.assign.MapAssigner
 import net.numalab.puzzle.puzzle.ImagedPuzzle
+import net.numalab.puzzle.team.TeamSessionData
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.awt.image.BufferedImage
+import java.util.*
 import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
 
 class PuzzleSetupper {
     fun setUp(settings: PuzzleSettings) {
@@ -67,20 +71,27 @@ class PuzzleSetupper {
         val yRow = ceil(resizedImage.height / 128.0).toInt()
 
         player.sendMessage("" + ChatColor.GREEN + "パズル生成中...")
-        val mock =
-            DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
-        val imaged = split.map {
-            ImagedMap(it.value, mock[it.key.first, it.key.second]!!)
+
+        val imagedPuzzles = settings.targetPlayers.associateWith {
+            val mock =
+                DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
+            val imaged = split.map {
+                ImagedMap(it.value, mock[it.key.first, it.key.second]!!)
+            }
+
+            return@associateWith ImagedPuzzle(mock, imaged)
         }
 
-        val imagedPuzzle = ImagedPuzzle(mock, imaged)
+        val stacksMap = imagedPuzzles.map {
+            return@map it.key to it.value.toItemStacks(player.world)
+        }.toMap()
 
-        val stacks = imagedPuzzle.toItemStacks(player.world)
-
-        val finalStacks = if (isShuffle) {
-            stacks.shuffled()
+        val finalStacksMap = if (isShuffle) {
+            stacksMap.map {
+                return@map it.key to it.value.shuffled()
+            }.toMap()
         } else {
-            stacks
+            stacksMap
         }
 
         player.sendMessage(Component.empty())
@@ -93,11 +104,11 @@ class PuzzleSetupper {
         if (settings.assignPieceMode) {
             player.sendMessage("" + ChatColor.GREEN + "ピース割り当て中...")
             settings.targetPlayers.forEach { target ->
-                val f = finalStacks.map { it.clone() }
+                val f = finalStacksMap[target]!!
                 if (!assignToPlayers(f, target)) {
                     return
                 }
-                imagedPuzzle.puzzle.attributes.add(settings.quitSettingMode)
+                imagedPuzzles[target]!!.puzzle.attributes.add(settings.quitSettingMode)
             }
 
             when (settings.quitSettingMode) {
@@ -111,13 +122,27 @@ class PuzzleSetupper {
             player.sendMessage(Component.empty())
         }
 
+        // パズルのAttributeにTeamSession情報を追加
+        if (settings.targetPlayers.size != 1) {
+            val sessionID = UUID.randomUUID()
+
+            imagedPuzzles.forEach {
+                it.value.puzzle.attributes.add(TeamSessionData(sessionID, it.key))
+            }
+        }
+
+
         sendPlaceMessage(player, settings.targetPlayers.size - 1, settings.targetPlayers.size)
 
         settings.locationSelector.addQueue(player.uniqueId, settings.targetPlayers.size) { p, loc, remainTimes: Int ->
             val b = if (settings.assignPieceMode) {
                 FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
             } else {
-                FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).set(finalStacks)
+                FrameFiller(
+                    loc.add(.0, 1.0, .0),
+                    xColumn,
+                    yRow
+                ).set(finalStacksMap.entries.toList()[settings.targetPlayers.size - remainTimes - 1].value)
             }
 
             if (b) {
@@ -142,23 +167,26 @@ class PuzzleSetupper {
             Bukkit.broadcast(text("割り当て先のプレイヤーがみつかりませんでした(ゲームモードを変更してください)", NamedTextColor.RED))
             return false
         }
-        pieces.chunked((pieces.size.toDouble() / players.size.toDouble()).toInt()).forEachIndexed { index, list ->
-            if (index <= players.lastIndex) {
-                val player = players[index]
-                player.inventory.clear()
-                list.forEach { map ->
-                    MapAssigner.assign(map, player, true)
-                    player.inventory.addOrDrop(map)
-                }
-            } else {
-                // あまりの分
-                list.forEach { map ->
-                    val player = players.random()
-                    MapAssigner.assign(map, player, true)
-                    player.inventory.addOrDrop(map)
+
+        players.forEach { it.inventory.clear() }
+
+        pieces.chunked(max((pieces.size.toDouble() / players.size.toDouble()).toInt(), 1))
+            .forEachIndexed { index, list ->
+                if (index <= players.lastIndex) {
+                    val player = players[index]
+                    list.forEach { map ->
+                        MapAssigner.assign(map, player, true)
+                        player.inventory.addOrDrop(map)
+                    }
+                } else {
+                    // あまりの分
+                    list.forEach { map ->
+                        val player = players.random()
+                        MapAssigner.assign(map, player, true)
+                        player.inventory.addOrDrop(map)
+                    }
                 }
             }
-        }
 
         return true
     }

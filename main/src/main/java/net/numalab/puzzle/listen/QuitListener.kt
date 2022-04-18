@@ -9,6 +9,7 @@ import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.map.assign.MapAssigner
 import net.numalab.puzzle.setup.QuitSetting
+import net.numalab.puzzle.solved.getTeamSession
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -32,8 +33,12 @@ class QuitListener(val plugin: PuzzlePlugin) : Listener {
             if (mode != null) {
                 when (mode) {
                     QuitSetting.AssignToAll -> {
+                        val teamSessionData = it.value.piece.puzzle.getTeamSession()
+                        val toAssignTargetPlayer = teamSessionData?.teams ?: Bukkit.getOnlinePlayers()
+
+
                         val toAssignPlayer =
-                            plugin.config.players().filter { p -> p.uniqueId != e.player.uniqueId }.randomOrNull()
+                            toAssignTargetPlayer.filter { p -> p.uniqueId != e.player.uniqueId }.randomOrNull()
                         if (toAssignPlayer != null) {
                             assignedPlayer.inventory.removeItemAnySlot(it.key)
                             MapAssigner.assign(it.key, toAssignPlayer, true)

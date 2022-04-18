@@ -13,6 +13,7 @@ import net.numalab.puzzle.puzzle.ImagedPuzzleManager
 import net.numalab.puzzle.puzzle.Puzzle
 import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.solved.InteractPrevent
+import net.numalab.puzzle.solved.solvedResult
 import org.bukkit.plugin.java.JavaPlugin
 
 class PuzzlePlugin : JavaPlugin() {
@@ -55,5 +56,6 @@ class PuzzlePlugin : JavaPlugin() {
         MapAssigner.reset()
         emphasize.puzzle.value = null
         ImagedPuzzleManager.reset()
+        solvedResult.clear()
     }
 }
