@@ -1,6 +1,8 @@
 package net.numalab.puzzle
 
 import com.github.bun133.guifly.value.Value
+import com.github.bun133.testfly.assert
+import com.github.bun133.testfly.report
 import dev.kotx.flylib.flyLib
 import net.numalab.puzzle.command.PuzzleCommand
 import net.numalab.puzzle.hint.Emphasize
@@ -14,6 +16,7 @@ import net.numalab.puzzle.puzzle.Puzzle
 import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.solved.InteractPrevent
 import net.numalab.puzzle.solved.solvedResult
+import net.numalab.puzzle.test.PuzzleAssertion
 import org.bukkit.plugin.java.JavaPlugin
 
 class PuzzlePlugin : JavaPlugin() {
@@ -22,6 +25,8 @@ class PuzzlePlugin : JavaPlugin() {
     lateinit var locationSelector: PuzzleLocationSelector
     lateinit var emphasizeSelector: EmphasizeSelector
     val emphasize = Emphasize(Value(null), this)
+
+    var assertion = PuzzleAssertion(this)
 
     override fun onEnable() {
         config = PuzzleConfig(this).also {
@@ -45,6 +50,16 @@ class PuzzlePlugin : JavaPlugin() {
     }
 
     override fun onDisable() {
+        if (config.logOutAssertionResult.value()) {
+            val report = this.report()
+            report.second.forEach {
+                println(it)
+            }
+
+            println("")
+            println("")
+            println("Assertion Result:${report.first}")
+        }
         reset()
         config.saveConfigIfPresent()
     }
@@ -57,5 +72,6 @@ class PuzzlePlugin : JavaPlugin() {
         emphasize.puzzle.value = null
         ImagedPuzzleManager.reset()
         solvedResult.clear()
+        assertion = PuzzleAssertion(this)
     }
 }

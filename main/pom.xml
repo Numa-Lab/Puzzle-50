@@ -173,5 +173,10 @@
             <artifactId>BukkitFly</artifactId>
             <version>b7e4281dd4</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.Bun133</groupId>
+            <artifactId>TestFly</artifactId>
+            <version>298503303c</version>
+        </dependency>
     </dependencies>
 </project>

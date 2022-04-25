@@ -32,6 +32,11 @@ class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
             .filterKeys { targetTeams.value().contains(it) }
             .values.toList()
     }
+
+    /**
+     * テスト用
+     */
+    val logOutAssertionResult = BooleanValue(true)
 }
 
 class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(plugin) {
