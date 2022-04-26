@@ -15,12 +15,14 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.numalab.puzzle.DefaultPuzzleSetting
+import net.numalab.puzzle.img.ImageLoader
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.net.URL
 import java.util.UUID
+import kotlin.math.ceil
 
 class PuzzleSetUpGUI(
     private val url: URL,
@@ -68,12 +70,33 @@ class PuzzleSetUpGUI(
     private val toSetUpFrame = Value(defaultSetting.toSetUpFrame.value())
 
     private fun genGUI(plugin: JavaPlugin): GUI {
+        val img = ImageLoader().loadImage(url)
+        val width = img?.width
+        val height = img?.height
+
+
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
             ItemStack(it.value).also { i ->
                 i.editMeta { m ->
                     m.displayName(
                         Component.text(it.key.name)
                     )
+
+                    if (width != null && height != null) {
+                        val x = ceil(it.key.apply(width.toDouble()) / 128.0).toInt()
+                        val y = ceil(it.key.apply(height.toDouble()) / 128.0).toInt()
+
+                        m.lore(
+                            listOf(
+                                Component.text(
+                                    "サイズ:${x}×${y}"
+                                ),
+                                Component.text(
+                                    "ピース数:${x * y}ピース"
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }).markAsUnMovable().build()

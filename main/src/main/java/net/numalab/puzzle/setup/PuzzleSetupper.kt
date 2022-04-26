@@ -97,7 +97,7 @@ class PuzzleSetupper {
         player.sendMessage(Component.empty())
 
         player.sendMessage("" + ChatColor.GREEN + "パズルを作成しました")
-        player.sendMessage("" + ChatColor.GREEN + "縦:${yRow} 横:${xColumn}の計${xColumn * yRow}ピースです")
+        player.sendMessage("" + ChatColor.GREEN + "縦:${xColumn} 横:${yRow}の計${xColumn * yRow}ピースです")
 
         player.sendMessage(Component.empty())
 

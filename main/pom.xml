@@ -161,7 +161,7 @@
         <dependency>
             <groupId>com.github.Bun133</groupId>
             <artifactId>GUIFly</artifactId>
-            <version>0.2</version>
+            <version>8f6738b33e</version>
         </dependency>
         <dependency>
             <groupId>com.github.TeamKun</groupId>
