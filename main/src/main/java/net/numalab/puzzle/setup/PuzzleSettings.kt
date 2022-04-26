@@ -13,7 +13,8 @@ data class PuzzleSettings(
     val assignPieceMode: Boolean,
     val quitSettingMode: QuitSetting,
     // 複数チームいるときは入れ子にする
-    val targetPlayers: List<List<Player>>
+    val targetPlayers: List<List<Player>>,
+    val toSetUpFrame: Boolean,
 )
 
 fun PuzzleSettings.setUp() {

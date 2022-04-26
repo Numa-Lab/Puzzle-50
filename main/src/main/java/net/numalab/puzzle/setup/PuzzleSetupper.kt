@@ -132,28 +132,38 @@ class PuzzleSetupper {
         }
 
 
-        sendPlaceMessage(player, settings.targetPlayers.size - 1, settings.targetPlayers.size)
+        // フレームを生成するかどうか
+        if (settings.toSetUpFrame) {
+            sendPlaceMessage(player, settings.targetPlayers.size - 1, settings.targetPlayers.size)
 
-        settings.locationSelector.addQueue(player.uniqueId, settings.targetPlayers.size) { p, loc, remainTimes: Int ->
-            val b = if (settings.assignPieceMode) {
-                FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
-            } else {
-                FrameFiller(
-                    loc.add(.0, 1.0, .0),
-                    xColumn,
-                    yRow
-                ).set(finalStacksMap.entries.toList()[settings.targetPlayers.size - remainTimes - 1].value)
-            }
-
-            if (b) {
-                p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
-                return@addQueue false
-            } else {
-                p.sendMessage("パズルの開始位置を設定しました")
-                if (remainTimes > 0) {
-                    sendPlaceMessage(player, settings.targetPlayers.size - remainTimes + 1, settings.targetPlayers.size)
+            settings.locationSelector.addQueue(
+                player.uniqueId,
+                settings.targetPlayers.size
+            ) { p, loc, remainTimes: Int ->
+                val b = if (settings.assignPieceMode) {
+                    FrameFiller(loc.add(.0, 1.0, .0), xColumn, yRow).placeItemFrame()
+                } else {
+                    FrameFiller(
+                        loc.add(.0, 1.0, .0),
+                        xColumn,
+                        yRow
+                    ).set(finalStacksMap.entries.toList()[settings.targetPlayers.size - remainTimes - 1].value)
                 }
-                return@addQueue true
+
+                if (b) {
+                    p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
+                    return@addQueue false
+                } else {
+                    p.sendMessage("パズルの開始位置を設定しました")
+                    if (remainTimes > 0) {
+                        sendPlaceMessage(
+                            player,
+                            settings.targetPlayers.size - remainTimes + 1,
+                            settings.targetPlayers.size
+                        )
+                    }
+                    return@addQueue true
+                }
             }
         }
     }

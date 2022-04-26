@@ -65,6 +65,7 @@ class PuzzleSetUpGUI(
     private val isAssign = Value(defaultSetting.isAssign.value())
     private val quitSetting = Value(defaultSetting.quitSettingMode.value())
     private val isTeamMode = Value(defaultSetting.isTeamMode.value())
+    private val toSetUpFrame = Value(defaultSetting.toSetUpFrame.value())
 
     private fun genGUI(plugin: JavaPlugin): GUI {
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
@@ -119,6 +120,14 @@ class PuzzleSetUpGUI(
             ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("チームモードを使用する")) } }
         ).markAsUnMovable().build()
 
+        val frame = BooleanValueItemBuilder(
+            7,
+            2,
+            toSetUpFrame,
+            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("フレームを設置しない")) } },
+            ItemStack(Material.LIME_WOOL).also { it.editMeta { m -> m.displayName(text("フレームを設置する")) } }
+        ).markAsUnMovable().build()
+
         val gui = gui(plugin) {
             title(Component.text("パズル設定"))
             type(InventoryType.CHEST_3)
@@ -127,6 +136,7 @@ class PuzzleSetUpGUI(
             addItem(assign)
             addItem(quit)
             addItem(team)
+            addItem(frame)
 
             item(9, 3) {
                 markAsUnMovable()
@@ -162,6 +172,7 @@ class PuzzleSetUpGUI(
                 isAssign.value,
                 quitSetting.value,
                 defaultSetting.conf.teams(),
+                toSetUpFrame.value,
             )
         } else {
             PuzzleSettings(
@@ -173,6 +184,7 @@ class PuzzleSetUpGUI(
                 isAssign.value,
                 quitSetting.value,
                 listOf(defaultSetting.conf.players()),
+                toSetUpFrame.value,
             )
         }
         defaultSetting.applySettings(setting)

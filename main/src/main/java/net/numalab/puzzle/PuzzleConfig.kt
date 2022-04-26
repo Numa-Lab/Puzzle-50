@@ -12,7 +12,6 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import org.bukkit.scoreboard.Team
 import java.net.URL
 
 class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
@@ -50,7 +49,8 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
                 url,
                 isAssign.value(),
                 quitSettingMode.value(),
-                conf.teams()
+                conf.teams(),
+                toSetUpFrame.value()
             )
         } else {
             PuzzleSettings(
@@ -61,7 +61,8 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
                 url,
                 isAssign.value(),
                 quitSettingMode.value(),
-                listOf(conf.players())
+                listOf(conf.players()),
+                toSetUpFrame.value()
             )
         }
     }
@@ -83,4 +84,6 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
     val quitSettingMode = EnumValue<QuitSetting>(QuitSetting.None)
 
     val isTeamMode = BooleanValue(false)
+
+    val toSetUpFrame = BooleanValue(false)
 }
