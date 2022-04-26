@@ -58,5 +58,7 @@ class QuitListener(val plugin: PuzzlePlugin) : Listener {
         if (!isAssigned) {
             Bukkit.broadcast(e.player.displayName() + text("の一部のピースは割り当てる相手が見つからなかったため、割り当ては変更されませんでした"))
         }
+
+        plugin.assertion.quit.assert { isAssigned }
     }
 }

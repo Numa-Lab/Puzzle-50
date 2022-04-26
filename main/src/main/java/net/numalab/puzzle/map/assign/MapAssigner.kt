@@ -1,5 +1,6 @@
 package net.numalab.puzzle.map.assign
 
+import com.github.bun133.bukkitfly.component.text
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.puzzle.Puzzle
 import org.bukkit.NamespacedKey
@@ -30,7 +31,7 @@ class MapAssigner private constructor() {
 
             if (changeItemName) {
                 map.editMeta {
-                    it.setDisplayName("${player.name}のピース")
+                    it.displayName(text("${player.name}のピース"))
                 }
             }
 

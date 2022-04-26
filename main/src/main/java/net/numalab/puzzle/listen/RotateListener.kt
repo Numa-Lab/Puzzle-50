@@ -21,6 +21,8 @@ class RotateListener(val plugin: PuzzlePlugin) {
                     for (itemFrame in toUpdate) {
                         update(itemFrame)
                     }
+
+                    plugin.assertion.rotate.assert { true }
                 }, 1)
             }
         }

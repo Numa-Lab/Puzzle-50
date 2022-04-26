@@ -31,6 +31,7 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
             val assigned = MapAssigner.getAssigned(e.item.itemStack)
             if (assigned != null && assigned != e.entity.uniqueId && (e.entity as Player).gameMode == plugin.config.targetGameMode.value()) {
                 // 他の人のマップを拾った
+                plugin.assertion.pickUp.assert { true }
                 e.isCancelled = true
             }
 
@@ -42,6 +43,7 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
                 }
 
                 checkSolved(map.piece.puzzle, e.entity.location, e.entity as Player, plugin)
+                plugin.assertion.pickUp.assert { true }
             }
         }
     }

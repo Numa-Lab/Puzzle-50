@@ -47,6 +47,7 @@ class PuzzlePlugin : JavaPlugin() {
         InteractPrevent(
             this, RotateListener(this), RemoveListener(this)
         )
+        InventoryTransferListener(this)
     }
 
     override fun onDisable() {

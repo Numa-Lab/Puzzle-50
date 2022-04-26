@@ -1,5 +1,6 @@
 package net.numalab.puzzle.listen
 
+import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.map.ImagedMapManager
 import org.bukkit.Location
 import org.bukkit.Material
@@ -13,7 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class RemoveListener(val plugin: JavaPlugin) : Listener {
+class RemoveListener(val plugin: PuzzlePlugin) : Listener {
     fun onRemove(e: EntityDamageByEntityEvent) {
         if (e.isCancelled) return
         if (e.entityType == EntityType.ITEM_FRAME && e.damager.type == EntityType.PLAYER) {
@@ -26,7 +27,8 @@ class RemoveListener(val plugin: JavaPlugin) : Listener {
                         update(it)
                     }
                     itemNot(en.item)
-                },1L)
+                    plugin.assertion.remove.assert { true }
+                }, 1L)
             }
         }
     }

@@ -11,6 +11,7 @@ class DropListener(val plugin: PuzzlePlugin) : Listener {
 
     @EventHandler
     fun onDrop(event: org.bukkit.event.player.PlayerDropItemEvent) {
+        plugin.assertion.drop.assert { true }
         updateEmphasize(event.player)
     }
 
