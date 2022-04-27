@@ -21,6 +21,7 @@ class RotateListener(val plugin: PuzzlePlugin) {
                     for (itemFrame in toUpdate) {
                         update(itemFrame)
                     }
+                    checkSolved(e.rightClicked as ItemFrame, e.player, plugin)
 
                     plugin.assertion.rotate.assert { true }
                 }, 1)
