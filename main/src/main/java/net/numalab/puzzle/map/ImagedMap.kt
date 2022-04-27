@@ -1,6 +1,7 @@
 package net.numalab.puzzle.map
 
 import net.numalab.puzzle.RotationUtils
+import net.numalab.puzzle.img.ImageRotator
 import net.numalab.puzzle.puzzle.Piece
 import net.numalab.puzzle.puzzle.PieceSideType
 import org.bukkit.Bukkit
@@ -12,6 +13,7 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 import java.awt.image.BufferedImage
+import kotlin.random.Random
 
 class ImagedMap(var img: BufferedImage, val piece: Piece) {
     companion object {
@@ -55,6 +57,16 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
             }
         } else {
             println("[ERROR]meta is not MapMeta")
+        }
+    }
+
+    // このピースの回転をシャッフルする
+    fun shuffle() {
+        val rotateTimes = Random.nextInt(4)
+        val rotatedImage = ImageRotator.rotateTimes(img, rotateTimes)
+        img = rotatedImage
+        repeat(rotateTimes) {
+            piece.rotate()
         }
     }
 

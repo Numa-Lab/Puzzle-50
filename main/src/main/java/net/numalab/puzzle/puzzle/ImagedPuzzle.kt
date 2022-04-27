@@ -17,4 +17,9 @@ class ImagedPuzzle(val puzzle: Puzzle, val baseImageSet: List<ImagedMap>) {
     }
 
     fun isSolved() = baseImageSet.all { it.isSolved } && baseImageSet.isNotEmpty()
+
+    // ピース・画像を回転した状態で保存する
+    fun shuffle() {
+        baseImageSet.forEach { it.shuffle() }
+    }
 }

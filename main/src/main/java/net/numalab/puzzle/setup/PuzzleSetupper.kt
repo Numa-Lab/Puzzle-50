@@ -82,6 +82,12 @@ class PuzzleSetupper {
             return@associateWith ImagedPuzzle(mock, imaged)
         }
 
+        if (isShuffle) {
+            imagedPuzzles.values.forEach {
+                it.shuffle()
+            }
+        }
+
         val stacksMap = imagedPuzzles.map {
             return@map it.key to it.value.toItemStacks(player.world)
         }.toMap()
