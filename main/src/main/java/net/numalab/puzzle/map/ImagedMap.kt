@@ -62,12 +62,13 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
 
     // このピースの回転をシャッフルする
     fun shuffle() {
-        val rotateTimes = Random.nextInt(4)
-        val rotatedImage = ImageRotator.rotateTimes(img, rotateTimes)
-        img = rotatedImage
+        val rotateTimes = Random.nextInt(3)
+        var rotatedImage: BufferedImage = img
         repeat(rotateTimes) {
+            rotatedImage = ImageRotator.rotateTimes(img, 1)
             piece.rotate()
         }
+        img = rotatedImage
     }
 
     private fun getNextItemFrame(frame: ItemFrame, direction: BlockFace): ItemFrame? {

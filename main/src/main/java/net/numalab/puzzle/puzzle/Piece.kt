@@ -26,7 +26,7 @@ class Piece(
     }
 
     /**
-     * 右回しに90度回されたときのピース
+     * 90度回されたときのピース
      */
     fun rotate() {
         val btop = top
@@ -34,10 +34,17 @@ class Piece(
         val bleft = left
         val bright = right
 
+        // 右回転
         top = bleft
         bottom = bright
         right = btop
         left = bbottom
+
+        // 左回転
+//        top = bright
+//        left = btop
+//        bottom = bleft
+//        right = bbottom
     }
 
     override fun equals(other: Any?): Boolean {
