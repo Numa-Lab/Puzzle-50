@@ -156,7 +156,7 @@ class PuzzleSetupper {
                     ).set(finalStacksMap.entries.toList()[settings.targetPlayers.size - remainTimes - 1].value)
                 }
 
-                if (b) {
+                if (!b) {
                     p.sendMessage("一部のピースの設置に失敗しました。平らな場所でもう一度試してください。")
                     return@addQueue false
                 } else {
