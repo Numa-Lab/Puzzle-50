@@ -16,6 +16,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.numalab.puzzle.DefaultPuzzleSetting
 import net.numalab.puzzle.img.ImageLoader
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -69,10 +70,13 @@ class PuzzleSetUpGUI(
     private val isTeamMode = Value(defaultSetting.isTeamMode.value())
     private val toSetUpFrame = Value(defaultSetting.toSetUpFrame.value())
 
-    private fun genGUI(plugin: JavaPlugin): GUI {
-        val img = ImageLoader().loadImage(url)
-        val width = img?.width
-        val height = img?.height
+    /**
+     * returns null if url is not valid image url
+     */
+    private fun genGUI(plugin: JavaPlugin): GUI? {
+        val img = ImageLoader().loadImage(url) ?: return null
+        val width = img.width
+        val height = img.height
 
 
         val size = EnumValueItemBuilder(2, 2, sizeValue, sizeMaterialMap.mapValues {
@@ -179,8 +183,12 @@ class PuzzleSetUpGUI(
 
     fun main(plugin: JavaPlugin, player: Player, callBack: (PuzzleSettings) -> Unit) {
         val gui = genGUI(plugin)
-        gui.open(player)
-        callBacks[player.uniqueId] = callBack
+        if (gui != null) {
+            gui.open(player)
+            callBacks[player.uniqueId] = callBack
+        } else {
+            player.sendMessage("" + ChatColor.RED + "画像の読み込みに失敗しました(URLを正しく指定してください)")
+        }
     }
 
     private fun onConfirm(player: Player) {
