@@ -117,7 +117,18 @@ class PuzzleSetUpGUI(
             4,
             2,
             isAssign,
-            ItemStack(Material.GRAY_WOOL).also { it.editMeta { m -> m.displayName(text("ピースを個人に割り当てない")) } },
+            ItemStack(Material.GRAY_WOOL).also {
+                it.editMeta { m ->
+                    m.displayName(text("ピースを個人に割り当てない"))
+                    m.lore(
+                        listOf(
+                            text("[注意!]インベントリが", NamedTextColor.RED) + text(
+                                "リセットされます",
+                                NamedTextColor.WHITE
+                            ).style { s -> s.decorate(TextDecoration.BOLD) })
+                    )
+                }
+            },
             ItemStack(Material.LIME_WOOL).also {
                 it.editMeta { m ->
                     m.displayName(text("ピースを個人に割り当てる"))

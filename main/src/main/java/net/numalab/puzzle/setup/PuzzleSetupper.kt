@@ -7,7 +7,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.numalab.puzzle.gen.DefaultPuzzleGenerator
 import net.numalab.puzzle.gen.PuzzleGenerateSetting
 import net.numalab.puzzle.geo.FrameFiller
-import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.img.ImageLoader
 import net.numalab.puzzle.img.ImageResizer
 import net.numalab.puzzle.img.ImageSplitter
@@ -23,7 +22,6 @@ import java.awt.image.BufferedImage
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
-import kotlin.math.min
 
 class PuzzleSetupper {
     fun setUp(settings: PuzzleSettings) {
@@ -111,7 +109,7 @@ class PuzzleSetupper {
             player.sendMessage("" + ChatColor.GREEN + "ピース割り当て中...")
             settings.targetPlayers.forEach { target ->
                 val f = finalStacksMap[target]!!
-                if (!assignToPlayers(f, target)) {
+                if (!giveToPlayers(f, target, true)) {
                     return
                 }
                 imagedPuzzles[target]!!.puzzle.attributes.add(settings.quitSettingMode)
@@ -123,6 +121,17 @@ class PuzzleSetupper {
                 }
                 QuitSetting.None -> {
                     player.sendMessage(text("退出時に再割り当ては行われません", NamedTextColor.DARK_RED))
+                }
+            }
+            player.sendMessage(Component.empty())
+        } else if (!settings.toSetUpFrame) {
+            // ピース割り当てモードでない場合 && フレーム設定モードでない場合
+            // → ランダムにピースを与える
+            player.sendMessage("" + ChatColor.GREEN + "ピース配布中...")
+            settings.targetPlayers.forEach { target ->
+                val f = finalStacksMap[target]!!
+                if (!giveToPlayers(f, target, false)) {
+                    return
                 }
             }
             player.sendMessage(Component.empty())
@@ -178,7 +187,7 @@ class PuzzleSetupper {
      * プレイヤーに割り当てて、スタックを渡す。(インベントリに入りきらなければドロップする)
      * @return if success
      */
-    private fun assignToPlayers(pieces: List<ItemStack>, players: List<Player>): Boolean {
+    private fun giveToPlayers(pieces: List<ItemStack>, players: List<Player>, isAssignMode: Boolean): Boolean {
         if (players.isEmpty()) {
             Bukkit.broadcast(text("割り当て先のプレイヤーがみつかりませんでした(ゲームモードを変更してください)", NamedTextColor.RED))
             return false
@@ -191,14 +200,18 @@ class PuzzleSetupper {
                 if (index <= players.lastIndex) {
                     val player = players[index]
                     list.forEach { map ->
-                        MapAssigner.assign(map, player, true)
+                        if (isAssignMode) {
+                            MapAssigner.assign(map, player, true)
+                        }
                         player.inventory.addOrDrop(map)
                     }
                 } else {
                     // あまりの分
                     list.forEach { map ->
                         val player = players.random()
-                        MapAssigner.assign(map, player, true)
+                        if (isAssignMode) {
+                            MapAssigner.assign(map, player, true)
+                        }
                         player.inventory.addOrDrop(map)
                     }
                 }
