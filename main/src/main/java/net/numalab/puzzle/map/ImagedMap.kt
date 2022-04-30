@@ -63,9 +63,8 @@ class ImagedMap(var img: BufferedImage, val piece: Piece) {
     // このピースの回転をシャッフルする
     fun shuffle() {
         val rotateTimes = Random.nextInt(3)
-        var rotatedImage: BufferedImage = img
+        val rotatedImage: BufferedImage = ImageRotator.rotateTimes(img, rotateTimes)
         repeat(rotateTimes) {
-            rotatedImage = ImageRotator.rotateTimes(img, 1)
             piece.rotate()
         }
         img = rotatedImage

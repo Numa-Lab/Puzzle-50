@@ -11,7 +11,7 @@ class ImageRotator {
             val h = img.height
             val bImg = BufferedImage(w, h, img.type)
             bImg.graphics.drawImage(img, 0, 0, w, h, null)
-            return bImg.rotateClockWise((times % 4) * 0.5 * Math.PI)
+            return bImg.rotateClockWise(Math.toRadians((times % 4) * 90.0))
         }
 
         private fun BufferedImage.rotateClockWise(rad: Double): BufferedImage {
@@ -19,9 +19,8 @@ class ImageRotator {
             val height: Int = 128
             val dest = BufferedImage(height, width, this.type)
             val graphics2D = dest.createGraphics()
-            graphics2D.translate((height - width) / 2, (height - width) / 2)
-            graphics2D.rotate(rad, (height / 2).toDouble(), (width / 2).toDouble())
-            graphics2D.drawRenderedImage(this, null)
+            graphics2D.rotate(rad, width / 2.0, height / 2.0)
+            graphics2D.drawImage(this, 0, 0, width, height, null)
             return dest
         }
     }
