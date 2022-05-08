@@ -20,7 +20,7 @@ class ImageRotator {
             val dest = BufferedImage(height, width, this.type)
             val graphics2D = dest.createGraphics()
             graphics2D.rotate(rad, width / 2.0, height / 2.0)
-            graphics2D.drawImage(this, 0, 0, width, height, null)
+            graphics2D.drawImage(this, 0, 0, this.width, this.height, null)
             return dest
         }
     }

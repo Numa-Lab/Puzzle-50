@@ -49,6 +49,8 @@ class PuzzleSetupper {
             player.sendMessage("" + ChatColor.RED + "画像の読み込みに失敗しました")
             return
         }
+
+        // 原本画像を拡大・縮小
         val resizedImage: BufferedImage?
         try {
             resizedImage =
@@ -63,13 +65,16 @@ class PuzzleSetupper {
 
         player.sendMessage("" + ChatColor.GREEN + "画像読み込み完了")
 
+        // 画像分割
         val split = ImageSplitter().split(resizedImage, 128, 128)
 
+        // 縦、横のピース数
         val xColumn = ceil(resizedImage.width / 128.0).toInt()
         val yRow = ceil(resizedImage.height / 128.0).toInt()
 
         player.sendMessage("" + ChatColor.GREEN + "パズル生成中...")
 
+        // パズル生成、パズルの画像を割り当てる
         val imagedPuzzles = settings.targetPlayers.associateWith {
             val mock =
                 DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
@@ -80,16 +85,19 @@ class PuzzleSetupper {
             return@associateWith ImagedPuzzle(mock, imaged)
         }
 
+        // シャッフル処理
         if (isShuffle) {
             imagedPuzzles.values.forEach {
                 it.shuffle()
             }
         }
 
+        // アイテムスタックの生成
         val stacksMap = imagedPuzzles.map {
             return@map it.key to it.value.toItemStacks(player.world)
         }.toMap()
 
+        // アイテムスタックのシャッフルしたやつ
         val finalStacksMap = if (isShuffle) {
             stacksMap.map {
                 return@map it.key to it.value.shuffled()
