@@ -1,22 +1,20 @@
 package net.numalab.puzzle
 
 import com.github.bun133.guifly.value.Value
-import com.github.bun133.testfly.assert
 import com.github.bun133.testfly.report
 import dev.kotx.flylib.flyLib
 import net.numalab.puzzle.command.PuzzleCommand
 import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.hint.EmphasizeSelector
 import net.numalab.puzzle.listen.*
-import net.numalab.puzzle.map.ImagedMap
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.map.assign.MapAssigner
 import net.numalab.puzzle.puzzle.ImagedPuzzleManager
-import net.numalab.puzzle.puzzle.Puzzle
 import net.numalab.puzzle.setup.PuzzleLocationSelector
 import net.numalab.puzzle.solved.InteractPrevent
 import net.numalab.puzzle.solved.solvedResult
 import net.numalab.puzzle.test.PuzzleAssertion
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class PuzzlePlugin : JavaPlugin() {
@@ -74,5 +72,14 @@ class PuzzlePlugin : JavaPlugin() {
         ImagedPuzzleManager.reset()
         solvedResult.clear()
         assertion = PuzzleAssertion(this)
+        clearAllEffect()
+    }
+
+    private fun clearAllEffect() {
+        Bukkit.getOnlinePlayers().forEach { p ->
+            p.activePotionEffects.toList().forEach {
+                p.removePotionEffect(it.type)
+            }
+        }
     }
 }
