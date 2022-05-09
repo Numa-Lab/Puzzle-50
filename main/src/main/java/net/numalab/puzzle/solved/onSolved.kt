@@ -59,7 +59,7 @@ fun onSolved(puzzle: Puzzle, location: Location, player: Player, plugin: Plugin)
     val teamSession = puzzle.getTeamSession()
 
     val affectPlayer = if (teamSession != null) {
-        teamSession.teams
+        teamSession.team.second
     } else {
         // チーム設定がない
         Bukkit.getOnlinePlayers()
@@ -81,15 +81,15 @@ fun onSolved(puzzle: Puzzle, location: Location, player: Player, plugin: Plugin)
         Bukkit.getOnlinePlayers().forEach {
             it.showTitle(
                 Title.title(
-                    text("パズルが完成しました！[${rank}位]", NamedTextColor.GREEN),
-                    player.displayName() + text("が最後のピースをはめました！", NamedTextColor.GREEN),
+                    text("パズルが完成しました！", NamedTextColor.GREEN),
+                    text("${rank}位 ", NamedTextColor.WHITE) + text(teamSession.team.first, NamedTextColor.GREEN),
                     Title.Times.of(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
                 )
             )
         }
         solvedResult[teamSession.sessionId] =
             list.toMutableList().also { m ->
-                if (m.none { s -> s.teams.containsAll(teamSession.teams) }) {
+                if (m.none { s -> s.team.second.containsAll(teamSession.team.second) }) {
                     m.add(teamSession)
                 }
             }

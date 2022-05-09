@@ -78,8 +78,8 @@ class PuzzleSetupper {
         val imagedPuzzles = settings.targetPlayers.associateWith {
             val mock =
                 DefaultPuzzleGenerator().generate(PuzzleGenerateSetting(xColumn, yRow, false))
-            val imaged = split.map {
-                ImagedMap(it.value, mock[it.key.first, it.key.second]!!)
+            val imaged = split.map { e ->
+                ImagedMap(e.value, mock[e.key.first, e.key.second]!!)
             }
 
             return@associateWith ImagedPuzzle(mock, imaged)
@@ -115,12 +115,12 @@ class PuzzleSetupper {
 
         if (settings.assignPieceMode) {
             player.sendMessage("" + ChatColor.GREEN + "ピース割り当て中...")
-            settings.targetPlayers.forEach { target ->
-                val f = finalStacksMap[target]!!
-                if (!giveToPlayers(f, target, true)) {
+            settings.targetPlayers.forEach { targetTeam ->
+                val f = finalStacksMap[targetTeam]!!
+                if (!giveToPlayers(f, targetTeam.second, true)) {
                     return
                 }
-                imagedPuzzles[target]!!.puzzle.attributes.add(settings.quitSettingMode)
+                imagedPuzzles[targetTeam]!!.puzzle.attributes.add(settings.quitSettingMode)
             }
 
             when (settings.quitSettingMode) {
@@ -136,9 +136,9 @@ class PuzzleSetupper {
             // ピース割り当てモードでない場合 && フレーム設定モードでない場合
             // → ランダムにピースを与える
             player.sendMessage("" + ChatColor.GREEN + "ピース配布中...")
-            settings.targetPlayers.forEach { target ->
-                val f = finalStacksMap[target]!!
-                if (!giveToPlayers(f, target, false)) {
+            settings.targetPlayers.forEach { targetTeam ->
+                val f = finalStacksMap[targetTeam]!!
+                if (!giveToPlayers(f, targetTeam.second, false)) {
                     return
                 }
             }
@@ -157,7 +157,12 @@ class PuzzleSetupper {
 
         // フレームを生成するかどうか
         if (settings.toSetUpFrame) {
-            sendPlaceMessage(player, settings.targetPlayers.size - 1, settings.targetPlayers.size)
+            sendPlaceMessage(
+                player,
+                settings.targetPlayers.size - 1,
+                settings.targetPlayers.size,
+                settings.targetPlayers[0].first
+            )
 
             settings.locationSelector.addQueue(
                 player.uniqueId,
@@ -182,7 +187,8 @@ class PuzzleSetupper {
                         sendPlaceMessage(
                             player,
                             settings.targetPlayers.size - remainTimes + 1,
-                            settings.targetPlayers.size
+                            settings.targetPlayers.size,
+                            settings.targetPlayers[settings.targetPlayers.size - remainTimes].first
                         )
                     }
                     return@addQueue true
@@ -228,7 +234,7 @@ class PuzzleSetupper {
         return true
     }
 
-    private fun sendPlaceMessage(player: Player, remainTimes: Int, allTimes: Int) {
+    private fun sendPlaceMessage(player: Player, remainTimes: Int, allTimes: Int, teamName: String) {
         when (allTimes) {
             1 -> {
                 player.sendMessage(text("ブロックをクリックして開始位置を指定してください", NamedTextColor.GREEN))
@@ -242,7 +248,7 @@ class PuzzleSetupper {
                     else -> {
                         player.sendMessage(
                             text(
-                                "ブロックをクリックして開始位置を指定してください[${remainTimes}/${allTimes}]",
+                                "ブロックをクリックして${teamName}の開始位置を指定してください[${remainTimes}/${allTimes}]",
                                 NamedTextColor.GREEN
                             )
                         )

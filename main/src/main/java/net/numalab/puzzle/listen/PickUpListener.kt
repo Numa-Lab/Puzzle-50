@@ -2,11 +2,11 @@ package net.numalab.puzzle.listen
 
 import com.github.bun133.bukkitfly.component.plus
 import com.github.bun133.bukkitfly.component.text
-import com.github.bun133.bukkitfly.entity.human.kill
 import net.kyori.adventure.text.Component
 import net.numalab.puzzle.PuzzlePlugin
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.map.assign.MapAssigner
+import net.numalab.puzzle.team.TeamSessionData
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.HumanEntity
@@ -14,8 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
-import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class PickUpListener(val plugin: PuzzlePlugin) : Listener {
@@ -33,6 +32,13 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
                 // 他の人のマップを拾った
                 plugin.assertion.pickUp.assert { true }
                 e.isCancelled = true
+            } else {
+                val session = e.item.itemStack.getTeamSession()
+                if (session != null && session.team.second.find { (e.entity as Player).uniqueId == it.uniqueId } == null) {
+                    // 他のチームのマップを拾った
+                    plugin.assertion.pickUp.assert { true }
+                    e.isCancelled = true
+                }
             }
 
             val map = ImagedMapManager.get(e.item.itemStack)
@@ -61,5 +67,13 @@ class PickUpListener(val plugin: PuzzlePlugin) : Listener {
         plugin.server.scheduler.runTaskLater(plugin, Runnable {
             plugin.emphasize.updatePlayer(player)
         }, 1)
+    }
+
+    private fun ItemStack.getTeamSession(): TeamSessionData? {
+        val map = ImagedMapManager.get(this)
+        if (map != null) {
+            return map.piece.puzzle.attributes.filterIsInstance(TeamSessionData::class.java).firstOrNull()
+        }
+        return null
     }
 }

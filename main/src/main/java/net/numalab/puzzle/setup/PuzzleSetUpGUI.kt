@@ -225,7 +225,7 @@ class PuzzleSetUpGUI(
                 url,
                 isAssign.value,
                 quitSetting.value,
-                listOf(defaultSetting.conf.players()),
+                listOf("DefaultTeam" to defaultSetting.conf.players()),
                 toSetUpFrame.value,
             )
         }

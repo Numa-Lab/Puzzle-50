@@ -5,5 +5,5 @@ import java.util.UUID
 
 data class TeamSessionData(
     val sessionId: UUID,
-    val teams: List<Player>
+    val team: Pair<String,List<Player>>
 )

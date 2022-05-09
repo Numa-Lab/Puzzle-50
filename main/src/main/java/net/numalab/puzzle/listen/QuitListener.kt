@@ -77,12 +77,8 @@ class QuitListener(val plugin: PuzzlePlugin) : Listener {
         return false
     }
 
-    private fun ImagedMap.teamSession(): TeamSessionData? {
-        return this.piece.puzzle.attributes.filterIsInstance(TeamSessionData::class.java).firstOrNull()
-    }
-
     private fun toAssignPlayer(map: ImagedMap, except: Player): Player? {
-        val from = map.teamSession()?.teams ?: plugin.config.players()
+        val from = map.teamSession()?.team?.second ?: plugin.config.players()
         return from.filter { it.uniqueId != except.uniqueId }.randomOrNull()
     }
 }

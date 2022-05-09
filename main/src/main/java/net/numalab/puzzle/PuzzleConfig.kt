@@ -24,12 +24,13 @@ class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
     val defaultPuzzleSetting = DefaultPuzzleSetting(plugin, this)
     val lockPuzzleAfterSolved = BooleanValue(true)
 
-    fun teams(): List<List<Player>> {
+    fun teams(): List<Pair<String, List<Player>>> {
         return players()
             .groupBy { Bukkit.getScoreboardManager().mainScoreboard.getEntryTeam(it.name) }
             .filterKeys { it != null }
             .filterKeys { targetTeams.value().contains(it) }
-            .values.toList()
+            .mapKeys { it.key!!.name }
+            .toList()
     }
 
     /**
@@ -61,7 +62,7 @@ class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(
                 url,
                 isAssign.value(),
                 quitSettingMode.value(),
-                listOf(conf.players()),
+                listOf("DefaultTeam" to conf.players()),
                 toSetUpFrame.value()
             )
         }
