@@ -14,7 +14,7 @@ class AdvancedMapPalette {
 
             val result = ByteArray(img.width * img.height)
             for (i in pixels.indices) {
-                result[i] = getFromColor(Color(pixels[i], false))
+                result[i] = getFromColor(Color(pixels[i], true))
             }
             return result
         }
