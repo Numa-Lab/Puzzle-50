@@ -1,6 +1,7 @@
 package net.numalab.puzzle.map
 
 import net.numalab.puzzle.RotationUtils
+import net.numalab.puzzle.puzzle.Piece
 import net.numalab.puzzle.puzzle.PieceSideType
 import org.bukkit.NamespacedKey
 import org.bukkit.block.BlockFace
@@ -13,6 +14,7 @@ class ImagedMapManager {
     companion object {
         // Piece.uuid : ImagedMap
         private val imagedMap = mutableMapOf<UUID, ImagedMap>()
+
         // Piece.uuid : ItemStacks
         private val stackMap = mutableMapOf<UUID, MutableList<ItemStack>>()
         private val nameSpacedKey = NamespacedKey("puzzle", "stackmarker")
@@ -46,6 +48,10 @@ class ImagedMapManager {
                 }
             }
             return null
+        }
+
+        fun get(piece: Piece): ImagedMap? {
+            return imagedMap[piece.uuid]
         }
 
         fun getAllStack(map: ImagedMap): List<ItemStack> {

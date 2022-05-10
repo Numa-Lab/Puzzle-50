@@ -6,6 +6,8 @@ import dev.kotx.flylib.flyLib
 import net.numalab.puzzle.command.PuzzleCommand
 import net.numalab.puzzle.hint.Emphasize
 import net.numalab.puzzle.hint.EmphasizeSelector
+import net.numalab.puzzle.hint.Generator
+import net.numalab.puzzle.hint.GeneratorSelector
 import net.numalab.puzzle.listen.*
 import net.numalab.puzzle.map.ImagedMapManager
 import net.numalab.puzzle.map.assign.MapAssigner
@@ -23,6 +25,8 @@ class PuzzlePlugin : JavaPlugin() {
     lateinit var locationSelector: PuzzleLocationSelector
     lateinit var emphasizeSelector: EmphasizeSelector
     val emphasize = Emphasize(Value(null), this)
+    lateinit var generateSelector: GeneratorSelector
+    val generator = Generator(this)
 
     var assertion = PuzzleAssertion(this)
 
@@ -38,6 +42,7 @@ class PuzzlePlugin : JavaPlugin() {
 
         locationSelector = PuzzleLocationSelector(this)
         emphasizeSelector = EmphasizeSelector(this)
+        generateSelector = GeneratorSelector(this)
         PickUpListener(this)
         PlaceListener(this)
         QuitListener(this)
@@ -66,6 +71,7 @@ class PuzzlePlugin : JavaPlugin() {
     fun reset() {
         locationSelector.reset()
         emphasizeSelector.reset()
+        generateSelector.reset()
         ImagedMapManager.reset()
         MapAssigner.reset()
         emphasize.puzzle.value = null
