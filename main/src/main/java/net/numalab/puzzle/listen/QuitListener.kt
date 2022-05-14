@@ -24,35 +24,57 @@ class QuitListener(val plugin: PuzzlePlugin) : Listener {
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {
         var isNotProcessed = false
-        e.player.inventory.contents
+        val inInventory = e.player.inventory.contents
             .filterNotNull()
             .toList()
-            .mapNotNull {
-                val i = ImagedMapManager.get(it)
-                if (i != null) {
-                    i to it
-                } else {
-                    null
-                }
+        inInventory.mapNotNull {
+            val i = ImagedMapManager.get(it)
+            if (i != null) {
+                i to it
+            } else {
+                null
             }
-            .forEach { pair ->
-                // remove item from inventory
-                e.player.inventory.remove(pair.second)
+        }.forEach { pair ->
+            // remove item from inventory
+            e.player.inventory.remove(pair.second)
 
-                if (pair.first.toReAssign()) {
-                    // re-assign item
-                    val toAssign = toAssignPlayer(pair.first, e.player)
-                    if (toAssign != null) {
-                        MapAssigner.assign(pair.second, toAssign, true)
-                        toAssign.inventory.addOrDrop(pair.second)
-                    } else {
-                        isNotProcessed = true
-                    }
+            if (pair.first.toReAssign()) {
+                // re-assign item
+                val toAssign = toAssignPlayer(pair.first, e.player)
+                if (toAssign != null) {
+                    MapAssigner.assign(pair.second, toAssign, true)
+                    toAssign.inventory.addOrDrop(pair.second)
                 } else {
-                    // drop item
-                    e.player.world.dropItem(e.player.location, pair.second)
+                    isNotProcessed = true
+                }
+            } else {
+                // drop item
+                e.player.world.dropItem(e.player.location, pair.second)
+            }
+        }
+
+        val all = MapAssigner.getAssigned(e.player)
+
+        // 地面に落ちているやつをいい感じにする
+        (all - inInventory.toSet()).mapNotNull {
+            val i = ImagedMapManager.get(it)
+            if (i != null) {
+                i to it
+            } else {
+                null
+            }
+        }.forEach { pair ->
+            if (pair.first.toReAssign()) {
+                // re-assign item
+                val toAssign = toAssignPlayer(pair.first, e.player)
+                if (toAssign != null) {
+                    MapAssigner.assign(pair.second, toAssign, true)
+                    toAssign.inventory.addOrDrop(pair.second)
+                } else {
+                    isNotProcessed = true
                 }
             }
+        }
 
 
         if (isNotProcessed) {

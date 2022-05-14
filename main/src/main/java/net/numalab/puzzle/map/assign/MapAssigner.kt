@@ -77,6 +77,10 @@ class MapAssigner private constructor() {
             }
         }
 
+        fun getAssigned(player: Player): List<ItemStack> {
+            return ImagedMapManager.getAllStack().filter { getAssigned(it) == player.uniqueId }
+        }
+
         // インベントリの中にピースがあるかどうか
         fun isCompleted(player: Player, lookFor: Puzzle): Boolean {
             return player.inventory.contents.filterNotNull().filter {
