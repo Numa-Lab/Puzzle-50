@@ -36,7 +36,7 @@ class PuzzleConfig(plugin: Plugin) : BaseConfig(plugin) {
     /**
      * テスト用
      */
-    val logOutAssertionResult = BooleanValue(true)
+    val logOutAssertionResult = BooleanValue(false)
 }
 
 class DefaultPuzzleSetting(plugin: Plugin, val conf: PuzzleConfig) : BaseConfig(plugin) {
