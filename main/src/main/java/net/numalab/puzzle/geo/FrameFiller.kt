@@ -34,31 +34,16 @@ class FrameFiller(val startLocation: Location, val width: Int, val height: Int) 
 
             return true
         } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
             return false
         }
     }
 
     fun placeItemFrame() = setAll(arrayOfNulls<ItemStack?>(width * height))
 
-    private fun setItemFrame(location: Location, content: ItemStack?, isOverWrite: Boolean = true) {
-        val i = location.getItemFrame()
-        if (i != null) {
-            if (isOverWrite || !i.item.type.isItem) {
-                i.setItem(content)
-                i.setFacingDirection(BlockFace.UP, true)
-            } else {
-                throw IllegalArgumentException("item frame is already exist")
-            }
-        } else {
-            val itemFrame = location.world.spawnEntity(location, EntityType.ITEM_FRAME)
-            itemFrame as ItemFrame
-            itemFrame.setItem(content)
-            itemFrame.setFacingDirection(BlockFace.UP, true)
-        }
-    }
-
-    private fun Location.getItemFrame(maxDistance: Double = 0.5 - 0.0625 + 0.01): ItemFrame? {
-        return this.world.getNearbyEntitiesByType(ItemFrame::class.java, this.toCenterLocation(), maxDistance).firstOrNull()
+    private fun setItemFrame(location: Location, content: ItemStack?) {
+        val itemFrame = location.world.spawnEntity(location, EntityType.ITEM_FRAME)
+        itemFrame as ItemFrame
+        itemFrame.setItem(content)
+        itemFrame.setFacingDirection(BlockFace.UP, true)
     }
 }
