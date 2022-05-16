@@ -77,7 +77,7 @@ fun ImagedMap.checkInteractive(player: Player, conf: PuzzleConfig): Boolean {
     return if (teamSession == null) {
         player.gameMode == GameMode.CREATIVE || conf.players().contains(player)
     } else {
-        player.gameMode == GameMode.CREATIVE || teamSession.team.second.contains(player)
+        player.gameMode == GameMode.CREATIVE || teamSession.team.second.map { it.uniqueId }.contains(player.uniqueId)
     }
 }
 
